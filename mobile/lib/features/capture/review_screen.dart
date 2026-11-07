@@ -29,6 +29,10 @@ class _Edit {
   String? assigneeUserId;
 }
 
+/// The theme gives buttons full width (Size.fromHeight); inside a Row or dialog actions that width is
+/// unbounded, so inline buttons need a finite minimum size.
+final _compact = FilledButton.styleFrom(minimumSize: const Size(64, 40));
+
 class _ReviewScreenState extends ConsumerState<ReviewScreen> {
   final _edits = <String, _Edit>{};
   final _busy = <String>{};
@@ -92,7 +96,11 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         content: TextField(controller: controller, autofocus: true, maxLength: 200),
         actions: [
           TextButton(onPressed: () => Navigator.pop(c), child: Text(MaterialLocalizations.of(c).cancelButtonLabel)),
-          FilledButton(onPressed: () => Navigator.pop(c, controller.text.trim()), child: Text(MaterialLocalizations.of(c).okButtonLabel)),
+          FilledButton(
+            style: _compact,
+            onPressed: () => Navigator.pop(c, controller.text.trim()),
+            child: Text(MaterialLocalizations.of(c).okButtonLabel),
+          ),
         ],
       ),
     );
@@ -260,6 +268,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 const SizedBox(width: HallySpace.sm),
                 FilledButton.tonal(
                   key: Key('review.approve.${p.id}'),
+                  style: _compact,
                   onPressed: busy || !_ready(p) ? null : () => _approve(familyId, p),
                   child: Text(l10n.reviewApprove),
                 ),
