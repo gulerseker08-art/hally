@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: hally
+      POSTGRES_USER: ${POSTGRES_USER:-hally}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hally} -d hally"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ConnectionStrings__Hally: Host=postgres;Database=hally;Username=${POSTGRES_USER:-hally};Password=${POSTGRES_PASSWORD}
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:?set JWT_SIGNING_KEY in .env}
+      App__PublicBaseUrl: ${PUBLIC_BASE_URL:-http://localhost:8080}
+      ExternalAuth__GoogleClientIds__0: ${GOOGLE_CLIENT_ID:-}
+      ExternalAuth__AppleAudiences__0: ${APPLE_AUDIENCE:-}
+      ExternalAuth__EnableDevProvider: ${ENABLE_DEV_SIGN_IN:-true}
+      Database__MigrateOnStartup: "true"
+    ports: ["8080:8080"]
+    # Readiness: GET http://localhost:8080/health/ready (checks PostgreSQL)
+
+volumes:
+  pgdata:

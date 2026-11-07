@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{1404DCFC-7DA3-4115-B7EC-353950278455}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C611A43-3273-4D28-94B4-48DF12820C03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hally.Api", "backend\src\Hally.Api\Hally.Api.csproj", "{9A4B4619-1B0D-4B82-9996-4FC8FCC950D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hally.Domain", "backend\src\Hally.Domain\Hally.Domain.csproj", "{D7B5EA2D-7BE7-4733-8DE1-BFB9846D7577}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hally.Infrastructure", "backend\src\Hally.Infrastructure\Hally.Infrastructure.csproj", "{84260D22-2E79-4F37-A774-050E7576234A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9A91DC18-AC9A-427A-8489-61EFC4ACD979}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hally.Api.Tests", "backend\tests\Hally.Api.Tests\Hally.Api.Tests.csproj", "{F378B15D-997B-42B4-BCA5-38D2BC9E27AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A4B4619-1B0D-4B82-9996-4FC8FCC950D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A4B4619-1B0D-4B82-9996-4FC8FCC950D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A4B4619-1B0D-4B82-9996-4FC8FCC950D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A4B4619-1B0D-4B82-9996-4FC8FCC950D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7B5EA2D-7BE7-4733-8DE1-BFB9846D7577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7B5EA2D-7BE7-4733-8DE1-BFB9846D7577}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7B5EA2D-7BE7-4733-8DE1-BFB9846D7577}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7B5EA2D-7BE7-4733-8DE1-BFB9846D7577}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84260D22-2E79-4F37-A774-050E7576234A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84260D22-2E79-4F37-A774-050E7576234A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84260D22-2E79-4F37-A774-050E7576234A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84260D22-2E79-4F37-A774-050E7576234A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F378B15D-997B-42B4-BCA5-38D2BC9E27AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F378B15D-997B-42B4-BCA5-38D2BC9E27AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F378B15D-997B-42B4-BCA5-38D2BC9E27AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F378B15D-997B-42B4-BCA5-38D2BC9E27AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7C611A43-3273-4D28-94B4-48DF12820C03} = {1404DCFC-7DA3-4115-B7EC-353950278455}
+		{9A4B4619-1B0D-4B82-9996-4FC8FCC950D1} = {7C611A43-3273-4D28-94B4-48DF12820C03}
+		{D7B5EA2D-7BE7-4733-8DE1-BFB9846D7577} = {7C611A43-3273-4D28-94B4-48DF12820C03}
+		{84260D22-2E79-4F37-A774-050E7576234A} = {7C611A43-3273-4D28-94B4-48DF12820C03}
+		{9A91DC18-AC9A-427A-8489-61EFC4ACD979} = {1404DCFC-7DA3-4115-B7EC-353950278455}
+		{F378B15D-997B-42B4-BCA5-38D2BC9E27AA} = {9A91DC18-AC9A-427A-8489-61EFC4ACD979}
+	EndGlobalSection
+EndGlobal
