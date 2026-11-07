@@ -8,7 +8,7 @@ void main() {
   });
 
   test('maps family json', () {
-    final f = Family.fromJson({
+    final f = FamilyDetails.fromJson({
       'id': 'f1',
       'name': 'Yılmaz Ailesi',
       'timeZoneId': 'Europe/Istanbul',

@@ -80,7 +80,7 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
             ),
             const SizedBox(height: HallySpace.md),
             DropdownButtonFormField<String>(
-              value: zone,
+              initialValue: zone,
               decoration: InputDecoration(labelText: l10n.familySetupTimeZone(zone)),
               items: [for (final z in supportedTimeZones) DropdownMenuItem(value: z, child: Text(z))],
               onChanged: (z) => setState(() => _timeZone = z),

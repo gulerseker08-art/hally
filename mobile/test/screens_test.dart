@@ -29,15 +29,15 @@ class _RecordingFamilyRepository implements FamilyRepository {
   final created = <String>[];
 
   @override
-  Future<Family> create(String name, String timeZoneId) async {
+  Future<FamilyDetails> create(String name, String timeZoneId) async {
     created.add('$name|$timeZoneId');
-    return Family(id: 'f1', name: name, timeZoneId: timeZoneId, members: const []);
+    return FamilyDetails(id: 'f1', name: name, timeZoneId: timeZoneId, members: const []);
   }
 
   @override
   Future<String> accept(String token) => throw UnimplementedError();
   @override
-  Future<Family> get(String familyId) => throw UnimplementedError();
+  Future<FamilyDetails> get(String familyId) => throw UnimplementedError();
   @override
   Future<Invitation> invite(String familyId) => throw UnimplementedError();
   @override

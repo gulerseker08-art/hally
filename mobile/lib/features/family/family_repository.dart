@@ -10,10 +10,10 @@ class FamilyMember {
   final String role;
 }
 
-class Family {
-  const Family({required this.id, required this.name, required this.timeZoneId, required this.members});
+class FamilyDetails {
+  const FamilyDetails({required this.id, required this.name, required this.timeZoneId, required this.members});
 
-  factory Family.fromJson(Map<String, dynamic> json) => Family(
+  factory FamilyDetails.fromJson(Map<String, dynamic> json) => FamilyDetails(
         id: json['id'] as String,
         name: json['name'] as String,
         timeZoneId: json['timeZoneId'] as String,
@@ -48,8 +48,8 @@ class InvitationPreview {
 }
 
 abstract interface class FamilyRepository {
-  Future<Family> create(String name, String timeZoneId);
-  Future<Family> get(String familyId);
+  Future<FamilyDetails> create(String name, String timeZoneId);
+  Future<FamilyDetails> get(String familyId);
   Future<Invitation> invite(String familyId);
   Future<InvitationPreview> preview(String token);
   Future<String> accept(String token);
@@ -69,15 +69,15 @@ class ApiFamilyRepository implements FamilyRepository {
   }
 
   @override
-  Future<Family> create(String name, String timeZoneId) => _call(() async {
+  Future<FamilyDetails> create(String name, String timeZoneId) => _call(() async {
         final res = await _api.dio.post<Map<String, dynamic>>('/api/v1/families', data: {'name': name, 'timeZoneId': timeZoneId});
-        return Family.fromJson(res.data!);
+        return FamilyDetails.fromJson(res.data!);
       });
 
   @override
-  Future<Family> get(String familyId) => _call(() async {
+  Future<FamilyDetails> get(String familyId) => _call(() async {
         final res = await _api.dio.get<Map<String, dynamic>>('/api/v1/families/$familyId');
-        return Family.fromJson(res.data!);
+        return FamilyDetails.fromJson(res.data!);
       });
 
   @override
@@ -103,7 +103,7 @@ class ApiFamilyRepository implements FamilyRepository {
 
 final familyRepositoryProvider = Provider<FamilyRepository>((ref) => ApiFamilyRepository(ref.watch(apiClientProvider)));
 
-final familyProvider = FutureProvider.family<Family, String>((ref, id) => ref.watch(familyRepositoryProvider).get(id));
+final familyProvider = FutureProvider.family<FamilyDetails, String>((ref, id) => ref.watch(familyRepositoryProvider).get(id));
 
 /// Extracts the token from a pasted invite link (https://…/i/{token}) or a bare token.
 String parseInviteToken(String input) {
