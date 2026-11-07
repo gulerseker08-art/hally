@@ -61,7 +61,22 @@ The app gets an ID token from Google or Apple and posts it to `POST /api/v1/auth
 | Apple | `ExternalAuth:AppleAudiences` = bundle id / Services ID (API) · Sign in with Apple capability (iOS) |
 | Dev | `ExternalAuth:EnableDevProvider=true`, Development/Testing only. Token: `dev:{email}:{name}` |
 
-## API (Sprint 1)
+## AI capture (Sprint 2)
+
+Photos, screenshots and pasted messages go to `POST /api/v1/families/{id}/captures`. The API calls an OpenAI-compatible
+model (`Ai:BaseUrl`, `Ai:ApiKey`, `Ai:VisionModel`, or `AI_*` in `.env`) and returns **proposals**. Nothing becomes a task or
+event until a family member approves it.
+
+The server never trusts the model blindly:
+- Date phrases (`haftaya cuma`, `ayın 15'i`, `next Friday`) are resolved by `RelativeDateResolver` in the family time zone.
+- A date or time the content does not mention is dropped and marked *needs info*.
+- Children are matched only against the family's own children, and the model never picks an assignee.
+- Content is wrapped as untrusted data, output is schema-validated and capped at 20 items.
+
+Without AI settings, captures are saved with status `Failed` (`ai.unavailable`) and can be retried later.
+Originals are AES-256-GCM encrypted on disk (`Storage:EncryptionKey`).
+
+## API
 
 | Method | Path | Notes |
 |---|---|---|
@@ -74,6 +89,14 @@ The app gets an ID token from Google or Apple and posts it to `POST /api/v1/auth
 | POST | `/api/v1/families/{id}/invitations` | 7-day link + prefilled WhatsApp text |
 | GET | `/api/v1/invitations/{token}` | Public preview |
 | POST | `/api/v1/invitations/{token}/accept` | Join as Adult |
+
+| POST | `/api/v1/families/{id}/captures` | multipart: `file` and/or `text`, `source` → proposals |
+| POST | `/api/v1/families/{id}/captures/{cid}/retry` | Retry failed extraction |
+| GET | `/api/v1/families/{id}/proposals?status=pending` | Waiting for approval |
+| POST | `/api/v1/families/{id}/proposals/{pid}/approve` · `/reject` | Approve with optional edits |
+| GET/POST/PUT | `/api/v1/families/{id}/tasks` · `/{tid}/complete` · `/reopen` · `/cancel` | Tasks |
+| GET/POST/PUT/DELETE | `/api/v1/families/{id}/events` | Events, with conflict detection |
+| GET | `/api/v1/families/{id}/today` | Overdue, due today, events, waiting proposals |
 
 All state-changing POSTs except auth require an `Idempotency-Key` header. Errors are RFC 9457 problem details with a `code` extension.
 

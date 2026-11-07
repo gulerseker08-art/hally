@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'core/auth/auth_repository.dart';
 import 'core/design/widgets.dart';
 import 'features/auth/sign_in_screen.dart';
+import 'features/capture/capture_text_screen.dart';
+import 'features/capture/review_screen.dart';
 import 'features/family/family_screen.dart';
 import 'features/family/family_setup_screen.dart';
 import 'features/family/invite_partner_screen.dart';
@@ -69,6 +71,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/i/:token', builder: (_, s) => JoinFamilyScreen(token: s.pathParameters['token']!)),
       GoRoute(path: '/family/new', builder: (_, __) => const FamilySetupScreen()),
       GoRoute(path: '/family/:id/invite', builder: (_, s) => InvitePartnerScreen(familyId: s.pathParameters['id']!)),
+      GoRoute(path: '/capture/text', builder: (_, __) => const CaptureTextScreen()),
+      GoRoute(path: '/capture/review', builder: (_, __) => const ReviewScreen()),
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => HomeShell(shell: shell),
         branches: [

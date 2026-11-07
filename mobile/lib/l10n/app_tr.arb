@@ -1,7 +1,13 @@
 {
   "@@locale": "tr",
   "appTagline": "Çek, söyle, {appName} halletsin.",
-  "@appTagline": { "placeholders": { "appName": { "type": "String" } } },
+  "@appTagline": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
   "welcomeTitle": "Ailenin zihinsel yükünü birlikte taşıyalım",
   "welcomeBody": "Okul duyurusunun fotoğrafını çek, mesajı paylaş ya da bir cümle söyle. Görevleri ben çıkarırım, siz onaylarsınız.",
   "welcomeStart": "Başlayalım",
@@ -22,7 +28,13 @@
   "familySetupNameLabel": "Aile adı",
   "familySetupNameHint": "Örn. Yılmaz Ailesi",
   "familySetupTimeZone": "Saat dilimi: {timeZone}",
-  "@familySetupTimeZone": { "placeholders": { "timeZone": { "type": "String" } } },
+  "@familySetupTimeZone": {
+    "placeholders": {
+      "timeZone": {
+        "type": "String"
+      }
+    }
+  },
   "familySetupCreate": "Aileyi oluştur",
   "familyNameRequired": "Aile adı gerekli",
   "inviteTitle": "Partnerini davet et",
@@ -33,7 +45,16 @@
   "inviteSkip": "Şimdilik geç",
   "joinTitle": "Aileye katıl",
   "joinBody": "{inviter} seni {family} ailesine davet etti.",
-  "@joinBody": { "placeholders": { "inviter": { "type": "String" }, "family": { "type": "String" } } },
+  "@joinBody": {
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      },
+      "family": {
+        "type": "String"
+      }
+    }
+  },
   "joinAccept": "Katıl",
   "joinExpired": "Bu davetin süresi dolmuş. Yeni bir link iste.",
   "joinUsed": "Bu davet zaten kullanılmış.",
@@ -50,5 +71,43 @@
   "signOut": "Çıkış yap",
   "errorGeneric": "Bir şeyler ters gitti. Tekrar dener misin?",
   "retry": "Tekrar dene",
-  "loading": "Yükleniyor…"
+  "loading": "Yükleniyor…",
+  "tabCapture": "Yakala",
+  "captureTitle": "Ne yakalayalım?",
+  "captureCamera": "Fotoğraf çek",
+  "captureGallery": "Galeriden seç",
+  "captureText": "Mesaj yapıştır",
+  "captureTextHint": "WhatsApp mesajını veya duyuruyu buraya yapıştır",
+  "captureAnalyze": "Görevleri çıkar",
+  "captureWorking": "Hally okuyor…",
+  "captureFailed": "Şu an okuyamadım. Birazdan tekrar dener misin?",
+  "captureNothingFound": "Bunda bir görev ya da etkinlik bulamadım.",
+  "captureDuplicates": "{count} madde zaten listende, tekrar eklemedim.",
+  "@captureDuplicates": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTitle": "Kontrol et ve onayla",
+  "reviewSubtitle": "Senin onayın olmadan hiçbir şey eklenmez.",
+  "reviewApprove": "Onayla",
+  "reviewApproveAll": "Hepsini onayla",
+  "reviewRemove": "Çıkar",
+  "reviewNeedsDate": "Tarih gerekli",
+  "reviewNeedsChild": "Hangi çocuk?",
+  "reviewPickDate": "Tarih seç",
+  "reviewAssignee": "Kim yapacak?",
+  "reviewUnassigned": "Henüz kimse",
+  "reviewEvent": "Etkinlik",
+  "reviewTask": "Görev",
+  "reviewAllDay": "Tüm gün",
+  "reviewDone": "Tamam, hepsi eklendi",
+  "todayWaiting": "Seni bekleyenler",
+  "todayOverdue": "Gecikenler",
+  "todayDue": "Bugün yapılacaklar",
+  "todayEvents": "Bugünün etkinlikleri",
+  "todayReview": "İncele",
+  "taskComplete": "Tamamlandı olarak işaretle"
 }
