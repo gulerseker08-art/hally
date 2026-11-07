@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - run: dotnet restore
+      - run: dotnet format --verify-no-changes --no-restore
+      - run: dotnet build --no-restore -c Release
+      - name: Check migrations are up to date
+        run: |
+          dotnet tool install -g dotnet-ef --version 8.0.11
+          dotnet ef migrations has-pending-model-changes -p backend/src/Hally.Infrastructure -s backend/src/Hally.Infrastructure
+      # Integration tests start PostgreSQL through Testcontainers (Docker is available on the runner).
+      - run: dotnet test --no-build -c Release --logger "trx;LogFileName=results.trx"
+      - name: Build API image
+        run: docker build -f backend/Dockerfile -t hally-api:ci .
+
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter gen-l10n
+      - run: flutter analyze
+      - run: flutter test
