@@ -26,7 +26,7 @@ class TrustScreen extends ConsumerWidget {
           key: const Key('trust.continue'),
           onPressed: () {
             ref.read(analyticsProvider).track(AnalyticsEvent.trustAccepted);
-            context.go('/sign-in');
+            context.go('/demo');
           },
           child: Text(l10n.trustContinue),
         ),

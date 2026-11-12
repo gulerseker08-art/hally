@@ -6,6 +6,7 @@ Events never contain PII: no names, emails, child names or free text. Ids are in
 |---|---|---|
 | `onboarding_started` | app | |
 | `onboarding_trust_accepted` | app | |
+| `onboarding_demo_scanned` | api, app | `count` (app), `locale` (api) |
 | `auth_sign_in_started` | app | `provider` |
 | `auth_signed_up` / `auth_signed_in` | api | `provider` |
 | `family_created` | api, app | `time_zone` |
@@ -21,4 +22,4 @@ Events never contain PII: no names, emails, child names or free text. Ids are in
 | `task_created` / `event_created` | api | `source` (manual) |
 | `task_completed` | api | |
 
-Planned for later sprints: `onboarding_demo_scanned`, `onboarding_completed`, `reminder_*`, `paywall_*`, `share_link_*`.
+Planned for later sprints: `onboarding_completed`, `reminder_*`, `paywall_*`, `share_link_*`.

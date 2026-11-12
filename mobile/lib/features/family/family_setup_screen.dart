@@ -7,6 +7,8 @@ import '../../core/auth/auth_repository.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
+import '../capture/capture_repository.dart';
+import '../demo/demo_repository.dart';
 import 'family_repository.dart';
 
 /// IANA zones offered at setup, launch markets first.
@@ -44,6 +46,7 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
     try {
       final family = await ref.read(familyRepositoryProvider).create(_name.text.trim(), timeZone);
       ref.read(analyticsProvider).track(AnalyticsEvent.familyCreated, {'time_zone': timeZone});
+      await _saveDemoItems(family.id);
       ref.invalidate(meProvider);
       if (mounted) context.go('/family/${family.id}/invite');
     } catch (_) {
@@ -52,6 +55,19 @@ class _FamilySetupScreenState extends ConsumerState<FamilySetupScreen> {
       }
     } finally {
       if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  /// "Save these to your family": the sample scanned before sign-up is captured for real, so its
+  /// proposals wait for approval on Today. Best effort: onboarding continues if it fails.
+  Future<void> _saveDemoItems(String familyId) async {
+    final text = ref.read(pendingDemoTextProvider);
+    if (text == null) return;
+    ref.read(pendingDemoTextProvider.notifier).state = null;
+    try {
+      await ref.read(captureRepositoryProvider).captureText(familyId, text, source: 'Text');
+    } catch (_) {
+      // The user can capture again from Today.
     }
   }
 

@@ -1,9 +1,11 @@
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hally.Api.Auth;
 using Hally.Api.Common;
 using Hally.Api.Features.Captures;
+using Hally.Api.Features.Demo;
 using Hally.Api.Features.Proposals;
 using Hally.Infrastructure.Ai;
 using Hally.Infrastructure.Analytics;
@@ -70,6 +72,19 @@ builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ProblemExceptionHandler>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o => o.SwaggerDoc("v1", new() { Title = $"{builder.Configuration["App:Name"] ?? "Hally"} API", Version = "v1" }));
+builder.Services.AddRateLimiter(o =>
+{
+    o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    // Anonymous demo scans call the paid AI provider: a few per client per hour.
+    o.AddPolicy(DemoController.RateLimitPolicy, ctx => RateLimitPartition.GetFixedWindowLimiter(
+        ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = builder.Configuration.GetValue("Demo:ScansPerHour", 5),
+            Window = TimeSpan.FromHours(1),
+            QueueLimit = 0,
+        }));
+});
 builder.Services.AddHealthChecks().AddNpgSql(connectionString, name: "postgres", tags: ["ready"]);
 
 var app = builder.Build();
@@ -90,6 +105,7 @@ if (!app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

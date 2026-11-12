@@ -76,6 +76,13 @@ The server never trusts the model blindly:
 Without AI settings, captures are saved with status `Failed` (`ai.unavailable`) and can be retried later.
 Originals are AES-256-GCM encrypted on disk (`Storage:EncryptionKey`).
 
+**Sharing into Hally.** Text, links and images shared from WhatsApp, Mail, Photos etc. become a capture (`source=Share`) and open the
+approval screen. The Dart side is in `mobile/lib/features/share`; the native share-target setup is in
+[docs/mobile/share-extension.md](docs/mobile/share-extension.md).
+
+**Demo scan.** Before sign-up, the user scans a sample school notice and sees what Hally finds. If they continue, the sample is
+saved as their first capture right after the family is created, still waiting for approval.
+
 ## API
 
 | Method | Path | Notes |
@@ -89,7 +96,7 @@ Originals are AES-256-GCM encrypted on disk (`Storage:EncryptionKey`).
 | POST | `/api/v1/families/{id}/invitations` | 7-day link + prefilled WhatsApp text |
 | GET | `/api/v1/invitations/{token}` | Public preview |
 | POST | `/api/v1/invitations/{token}/accept` | Join as Adult |
-
+| POST | `/api/v1/demo/scan` | Anonymous pre-signup sample scan (`sampleId`, `locale`); nothing stored, rate limited per IP (`Demo:ScansPerHour`) |
 | POST | `/api/v1/families/{id}/captures` | multipart: `file` and/or `text`, `source` → proposals |
 | POST | `/api/v1/families/{id}/captures/{cid}/retry` | Retry failed extraction |
 | GET | `/api/v1/families/{id}/proposals?status=pending` | Waiting for approval |
@@ -102,7 +109,7 @@ All state-changing POSTs except auth require an `Idempotency-Key` header. Errors
 
 ## Roadmap
 
-- **Sprint 1 – Foundation** (this): solution, auth, families, invitations, design tokens, tr/en, onboarding shell, analytics boundary, CI.
-- **Sprint 2 – Capture & AI proposals**: demo scan, capture sheet, share extension, extraction, approval sheet, tasks & calendar.
+- **Sprint 1 – Foundation** (done): solution, auth, families, invitations, design tokens, tr/en, onboarding shell, analytics boundary, CI.
+- **Sprint 2 – Capture & AI proposals** (done): demo scan, capture sheet, share extension, extraction, approval sheet, tasks & calendar.
 - **Sprint 3 – Assistant & daily loop**: chat, Today, reminders, push, helper share links, weekly card.
 - **Sprint 4 – Monetization & beta**: plans, paywall, privacy & account deletion, beta pipeline.

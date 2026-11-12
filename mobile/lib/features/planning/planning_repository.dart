@@ -57,15 +57,35 @@ class TodayData {
   bool get isEmpty => overdue.isEmpty && dueToday.isEmpty && events.isEmpty && waiting.isEmpty;
 }
 
+class SavedEvent {
+  const SavedEvent({required this.event, required this.conflicts});
+
+  final EventItem event;
+  final List<EventItem> conflicts;
+}
+
 abstract interface class PlanningRepository {
   Future<TodayData> today(String familyId);
   Future<void> completeTask(String familyId, String taskId);
+  Future<void> reopenTask(String familyId, String taskId);
+  Future<List<TaskItem>> tasks(String familyId, {required String state});
+  Future<TaskItem> createTask(String familyId, {required String title, DateTime? dueDate});
+  Future<List<EventItem>> events(String familyId, DateTime from, DateTime to);
+  Future<SavedEvent> createEvent(String familyId, {required String title, required DateTime startsAt, required bool allDay});
 }
 
 class ApiPlanningRepository implements PlanningRepository {
   ApiPlanningRepository(this._api);
 
   final ApiClient _api;
+
+  Future<T> _guard<T>(Future<T> Function() fn) async {
+    try {
+      return await fn();
+    } catch (e) {
+      throw ApiClient.toApiException(e);
+    }
+  }
 
   @override
   Future<TodayData> today(String familyId) async {
@@ -78,15 +98,79 @@ class ApiPlanningRepository implements PlanningRepository {
   }
 
   @override
-  Future<void> completeTask(String familyId, String taskId) async {
-    try {
-      await _api.dio.post<dynamic>('/api/v1/families/$familyId/tasks/$taskId/complete');
-    } catch (e) {
-      throw ApiClient.toApiException(e);
-    }
-  }
+  Future<void> completeTask(String familyId, String taskId) =>
+      _guard(() => _api.dio.post<dynamic>('/api/v1/families/$familyId/tasks/$taskId/complete'));
+
+  @override
+  Future<void> reopenTask(String familyId, String taskId) =>
+      _guard(() => _api.dio.post<dynamic>('/api/v1/families/$familyId/tasks/$taskId/reopen'));
+
+  @override
+  Future<List<TaskItem>> tasks(String familyId, {required String state}) => _guard(() async {
+        final res = await _api.dio.get<List<dynamic>>('/api/v1/families/$familyId/tasks', queryParameters: {'state': state});
+        return [for (final t in res.data!) TaskItem.fromJson(t as Map<String, dynamic>)];
+      });
+
+  @override
+  Future<TaskItem> createTask(String familyId, {required String title, DateTime? dueDate}) => _guard(() async {
+        final res = await _api.dio.post<Map<String, dynamic>>('/api/v1/families/$familyId/tasks', data: {
+          'title': title,
+          'dueAt': dueDate == null ? null : DateTime(dueDate.year, dueDate.month, dueDate.day).toUtc().toIso8601String(),
+          'allDay': dueDate != null,
+        });
+        return TaskItem.fromJson(res.data!);
+      });
+
+  @override
+  Future<List<EventItem>> events(String familyId, DateTime from, DateTime to) => _guard(() async {
+        final res = await _api.dio.get<List<dynamic>>('/api/v1/families/$familyId/events', queryParameters: {
+          'from': from.toUtc().toIso8601String(),
+          'to': to.toUtc().toIso8601String(),
+        });
+        return [for (final e in res.data!) EventItem.fromJson(e as Map<String, dynamic>)];
+      });
+
+  @override
+  Future<SavedEvent> createEvent(String familyId, {required String title, required DateTime startsAt, required bool allDay}) =>
+      _guard(() async {
+        final res = await _api.dio.post<Map<String, dynamic>>('/api/v1/families/$familyId/events', data: {
+          'title': title,
+          'startsAt': startsAt.toUtc().toIso8601String(),
+          'allDay': allDay,
+        });
+        final d = res.data!;
+        return SavedEvent(
+          event: EventItem.fromJson(d['event'] as Map<String, dynamic>),
+          conflicts: [for (final c in d['conflicts'] as List) EventItem.fromJson(c as Map<String, dynamic>)],
+        );
+      });
 }
 
 final planningRepositoryProvider = Provider<PlanningRepository>((ref) => ApiPlanningRepository(ref.watch(apiClientProvider)));
 
 final todayProvider = FutureProvider.autoDispose.family<TodayData, String>((ref, familyId) => ref.watch(planningRepositoryProvider).today(familyId));
+
+/// Monday-based week window for the calendar, in device-local time.
+class WeekKey {
+  const WeekKey(this.familyId, this.monday);
+
+  final String familyId;
+  final DateTime monday;
+
+  @override
+  bool operator ==(Object other) => other is WeekKey && other.familyId == familyId && other.monday == monday;
+
+  @override
+  int get hashCode => Object.hash(familyId, monday);
+}
+
+DateTime mondayOf(DateTime day) {
+  final d = DateTime(day.year, day.month, day.day);
+  return d.subtract(Duration(days: d.weekday - DateTime.monday));
+}
+
+final weekEventsProvider = FutureProvider.autoDispose.family<List<EventItem>, WeekKey>(
+    (ref, key) => ref.watch(planningRepositoryProvider).events(key.familyId, key.monday, key.monday.add(const Duration(days: 7))));
+
+final tasksProvider = FutureProvider.autoDispose.family<List<TaskItem>, (String, String)>(
+    (ref, args) => ref.watch(planningRepositoryProvider).tasks(args.$1, state: args.$2));

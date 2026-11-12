@@ -6,8 +6,9 @@ import 'package:go_router/go_router.dart';
 import '../../core/design/tokens.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../capture/capture_sheet.dart';
+import '../share/share_listener.dart';
 
-/// Tabs: Today · Capture (raised centre action, opens the capture sheet) · Family.
+/// Tabs: Today · Calendar · Capture (raised centre action, opens the capture sheet) · Tasks · Family.
 class HomeShell extends ConsumerWidget {
   const HomeShell({super.key, required this.shell});
 
@@ -23,11 +24,13 @@ class HomeShell extends ConsumerWidget {
 
     return Scaffold(
       extendBody: true,
-      body: shell,
+      body: ShareListener(child: shell),
       bottomNavigationBar: HallyNavBar(
         currentIndex: shell.currentIndex,
         items: [
           HallyNavItem(icon: Icons.wb_sunny_outlined, activeIcon: Icons.wb_sunny_rounded, label: l10n.tabToday),
+          HallyNavItem(icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month_rounded, label: l10n.tabCalendar),
+          HallyNavItem(icon: Icons.checklist_outlined, activeIcon: Icons.checklist_rounded, label: l10n.tabTasks),
           HallyNavItem(icon: Icons.people_alt_outlined, activeIcon: Icons.people_alt_rounded, label: l10n.tabFamily),
         ],
         centerLabel: l10n.tabCapture,
@@ -49,7 +52,7 @@ class HallyNavItem {
   final String label;
 }
 
-/// Floating rounded bar with two tabs and a raised gradient capture button between them.
+/// Floating rounded bar with tabs split evenly around a raised gradient capture button.
 class HallyNavBar extends StatelessWidget {
   const HallyNavBar({
     super.key,
@@ -90,9 +93,11 @@ class HallyNavBar extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Expanded(child: _Tab(item: items[0], selected: currentIndex == 0, onTap: () => onTap(0))),
-                  const SizedBox(width: 88),
-                  Expanded(child: _Tab(item: items[1], selected: currentIndex == 1, onTap: () => onTap(1))),
+                  for (var i = 0; i < items.length ~/ 2; i++)
+                    Expanded(child: _Tab(item: items[i], selected: currentIndex == i, onTap: () => onTap(i))),
+                  const SizedBox(width: 76),
+                  for (var i = items.length ~/ 2; i < items.length; i++)
+                    Expanded(child: _Tab(item: items[i], selected: currentIndex == i, onTap: () => onTap(i))),
                 ],
               ),
             ),

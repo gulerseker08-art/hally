@@ -13,6 +13,7 @@ abstract final class AnalyticsEvent {
   static const familyCreated = 'family_created';
   static const invitationShared = 'invitation_shared';
   static const invitationAccepted = 'invitation_accepted';
+  static const demoScanned = 'onboarding_demo_scanned';
   static const captureStarted = 'capture_started';
   static const proposalApproved = 'proposal_approved';
   static const proposalRejected = 'proposal_rejected';

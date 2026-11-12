@@ -51,6 +51,7 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseSetting("ExternalAuth:EnableDevProvider", "true");
         builder.UseSetting("App:PublicBaseUrl", "https://hally.test");
         builder.UseSetting("Storage:Root", StorageRoot);
+        builder.UseSetting("Demo:ScansPerHour", "5");
         builder.UseSetting("Storage:EncryptionKey", Convert.ToBase64String(new byte[32].Select((_, i) => (byte)i).ToArray()));
         builder.ConfigureServices(s =>
         {
