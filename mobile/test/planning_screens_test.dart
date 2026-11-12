@@ -18,7 +18,7 @@ const _me = Me(id: 'u1', displayName: 'Ayşe', locale: 'tr', families: [FamilyRe
 class _FakePlanning implements PlanningRepository {
   final open = <TaskItem>[const TaskItem(id: 't1', title: 'Beslenme çantası', allDay: false, state: 'Open')];
   final done = <TaskItem>[];
-  final events = <EventItem>[];
+  final saved = <EventItem>[];
   final completed = <String>[];
 
   @override
@@ -44,13 +44,13 @@ class _FakePlanning implements PlanningRepository {
 
   @override
   Future<List<EventItem>> events(String familyId, DateTime from, DateTime to) async =>
-      events.where((e) => !e.startsAt.isBefore(from) && e.startsAt.isBefore(to)).toList();
+      saved.where((e) => !e.startsAt.isBefore(from) && e.startsAt.isBefore(to)).toList();
 
   @override
   Future<SavedEvent> createEvent(String familyId, {required String title, required DateTime startsAt, required bool allDay}) async {
-    final e = EventItem(id: 'e${events.length}', title: title, startsAt: startsAt, allDay: allDay);
-    final conflicts = events.where((x) => x.startsAt == startsAt).toList();
-    events.add(e);
+    final e = EventItem(id: 'e${saved.length}', title: title, startsAt: startsAt, allDay: allDay);
+    final conflicts = saved.where((x) => x.startsAt == startsAt).toList();
+    saved.add(e);
     return SavedEvent(event: e, conflicts: conflicts);
   }
 

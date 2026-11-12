@@ -30,7 +30,12 @@ class _DemoScanScreenState extends ConsumerState<DemoScanScreen> {
       final items = await ref.read(demoRepositoryProvider).scanSample(DemoSamples.idFor(lang), lang);
       ref.read(analyticsProvider).track(AnalyticsEvent.demoScanned, {'count': items.length});
       ref.read(pendingDemoTextProvider.notifier).state = DemoSamples.textFor(lang);
-      if (mounted) setState(() => (_items, _phase) = (items, _Phase.done));
+      if (mounted) {
+        setState(() {
+          _items = items;
+          _phase = _Phase.done;
+        });
+      }
     } catch (_) {
       if (mounted) setState(() => _phase = _Phase.failed);
     }
