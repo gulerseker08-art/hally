@@ -3,8 +3,12 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hally.Api.Auth;
 using Hally.Api.Common;
+using Hally.Api.Features.Captures;
+using Hally.Api.Features.Proposals;
+using Hally.Infrastructure.Ai;
 using Hally.Infrastructure.Analytics;
 using Hally.Infrastructure.Persistence;
+using Hally.Infrastructure.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +28,8 @@ if (jwt.SigningKey.Length < 32)
 }
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.Section));
+builder.Services.Configure<AiOptions>(builder.Configuration.GetSection(AiOptions.Section));
+builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection(StorageOptions.Section));
 
 var connectionString = builder.Configuration.GetConnectionString("Hally")
                        ?? throw new InvalidOperationException("ConnectionStrings:Hally is not configured.");
@@ -36,6 +42,10 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddSingleton<IExternalIdentityVerifier, GoogleIdentityVerifier>();
 builder.Services.AddSingleton<IExternalIdentityVerifier, AppleIdentityVerifier>();
 builder.Services.AddSingleton<IExternalIdentityVerifier, DevIdentityVerifier>();
+builder.Services.AddHttpClient<IVisionModel, OpenAiCompatibleVisionModel>();
+builder.Services.AddSingleton<IDocumentStore, EncryptedFileDocumentStore>();
+builder.Services.AddScoped<ExtractionService>();
+builder.Services.AddScoped<ProposalEngine>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
 {
@@ -64,9 +74,9 @@ builder.Services.AddHealthChecks().AddNpgSql(connectionString, name: "postgres",
 
 var app = builder.Build();
 
+app.UseSerilogRequestLogging();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
-app.UseSerilogRequestLogging();
 
 if (app.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
 {

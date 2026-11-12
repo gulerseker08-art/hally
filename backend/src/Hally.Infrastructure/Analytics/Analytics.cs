@@ -19,6 +19,14 @@ public static class AnalyticsEvents
     public const string InvitationCreated = "invitation_created";
     public const string InvitationAccepted = "invitation_accepted";
     public const string ChildAdded = "child_added";
+    public const string CaptureStarted = "capture_started";
+    public const string DocumentScanned = "document_scanned";
+    public const string ProposalShown = "proposal_shown";
+    public const string ProposalApproved = "proposal_approved";
+    public const string ProposalRejected = "proposal_rejected";
+    public const string TaskCreated = "task_created";
+    public const string TaskCompleted = "task_completed";
+    public const string EventCreated = "event_created";
 }
 
 public class AnalyticsEvent

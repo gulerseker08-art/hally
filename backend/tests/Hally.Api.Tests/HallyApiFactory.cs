@@ -1,5 +1,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
+using Hally.Infrastructure.Ai;
 using Hally.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -20,6 +22,8 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
     private string _connectionString = default!;
 
     public TestClock Clock { get; } = new();
+    public FakeVisionModel Ai { get; } = new();
+    public string StorageRoot { get; } = Path.Combine(Path.GetTempPath(), $"hally-docs-{Guid.NewGuid():N}");
 
     public async Task InitializeAsync()
     {
@@ -46,10 +50,14 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseSetting("Jwt:SigningKey", "test-signing-key-0123456789-abcdefghijkl");
         builder.UseSetting("ExternalAuth:EnableDevProvider", "true");
         builder.UseSetting("App:PublicBaseUrl", "https://hally.test");
+        builder.UseSetting("Storage:Root", StorageRoot);
+        builder.UseSetting("Storage:EncryptionKey", Convert.ToBase64String(new byte[32].Select((_, i) => (byte)i).ToArray()));
         builder.ConfigureServices(s =>
         {
             s.RemoveAll<TimeProvider>();
             s.AddSingleton<TimeProvider>(Clock);
+            s.RemoveAll<IVisionModel>();
+            s.AddSingleton<IVisionModel>(Ai);
         });
     }
 
@@ -108,4 +116,23 @@ public sealed class TestClock : TimeProvider
     public override DateTimeOffset GetUtcNow() => base.GetUtcNow() + Offset;
 
     public void Advance(TimeSpan by) => Offset += by;
+}
+
+/// <summary>Scriptable stand-in for the LLM. Tests set <see cref="Respond"/> to return canned JSON.</summary>
+public sealed class FakeVisionModel : IVisionModel
+{
+    public Func<StructuredRequest, string> Respond { get; set; } = _ => """{"summary":null,"items":[]}""";
+    public bool Unavailable { get; set; }
+    public List<StructuredRequest> Requests { get; } = [];
+
+    public Task<JsonDocument> CompleteJsonAsync(StructuredRequest request, CancellationToken ct)
+    {
+        Requests.Add(request);
+        if (Unavailable)
+        {
+            throw new AiUnavailableException("fake outage");
+        }
+
+        return Task.FromResult(JsonDocument.Parse(Respond(request)));
+    }
 }

@@ -13,6 +13,8 @@ public class ProblemExceptionHandler(IProblemDetailsService problems, ILogger<Pr
         {
             DomainException d => (StatusCodes.Status422UnprocessableEntity, d.Code, d.Message),
             NotFoundException n => (StatusCodes.Status404NotFound, n.Code, n.Message),
+            Features.Proposals.ConflictException c => (StatusCodes.Status409Conflict, c.Code, c.Message),
+            Infrastructure.Ai.AiUnavailableException => (StatusCodes.Status503ServiceUnavailable, "ai.unavailable", "The AI assistant is temporarily unavailable."),
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "auth.unauthorized", "Unauthorized."),
             _ => (StatusCodes.Status500InternalServerError, "server.error", "An unexpected error occurred."),
         };

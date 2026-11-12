@@ -41,7 +41,7 @@ internal sealed class IdempotencyFilter(HallyDbContext db) : IAsyncActionFilter
         var arguments = context.ActionArguments
             .Where(a => a.Value is not CancellationToken)
             .OrderBy(a => a.Key, StringComparer.Ordinal)
-            .ToDictionary(a => a.Key, a => a.Value);
+            .ToDictionary(a => a.Key, a => a.Value is IFormFile f ? $"file:{f.FileName}:{f.Length}" : a.Value);
         var requestHash = Crypto.Sha256(JsonSerializer.Serialize(arguments, Json));
 
         var existing = await db.IdempotencyRecords.AsNoTracking()

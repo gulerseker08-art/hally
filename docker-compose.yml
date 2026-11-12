@@ -25,8 +25,15 @@ services:
       ExternalAuth__AppleAudiences__0: ${APPLE_AUDIENCE:-}
       ExternalAuth__EnableDevProvider: ${ENABLE_DEV_SIGN_IN:-true}
       Database__MigrateOnStartup: "true"
+      Ai__BaseUrl: ${AI_BASE_URL:-}
+      Ai__ApiKey: ${AI_API_KEY:-}
+      Ai__VisionModel: ${AI_VISION_MODEL:-}
+      Storage__Root: /data/documents
+      Storage__EncryptionKey: ${STORAGE_ENCRYPTION_KEY:?set STORAGE_ENCRYPTION_KEY in .env}
     ports: ["8080:8080"]
+    volumes: [documents:/data/documents]
     # Readiness: GET http://localhost:8080/health/ready (checks PostgreSQL)
 
 volumes:
   pgdata:
+  documents:
