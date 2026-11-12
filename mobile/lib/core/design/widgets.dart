@@ -81,7 +81,14 @@ class HallyPill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[Icon(icon, size: 14, color: fg), const SizedBox(width: 4)],
-          Text(label, style: TextStyle(color: fg, fontWeight: FontWeight.w700, fontSize: 12, letterSpacing: 0.2)),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: fg, fontWeight: FontWeight.w700, fontSize: 12, letterSpacing: 0.2),
+            ),
+          ),
         ],
       ),
     );
