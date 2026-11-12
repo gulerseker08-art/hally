@@ -6,6 +6,7 @@ using Hally.Api.Auth;
 using Hally.Api.Common;
 using Hally.Api.Features.Captures;
 using Hally.Api.Features.Demo;
+using Hally.Api.Features.Notifications;
 using Hally.Api.Features.Proposals;
 using Hally.Infrastructure.Ai;
 using Hally.Infrastructure.Analytics;
@@ -48,6 +49,17 @@ builder.Services.AddHttpClient<IVisionModel, OpenAiCompatibleVisionModel>();
 builder.Services.AddSingleton<IDocumentStore, EncryptedFileDocumentStore>();
 builder.Services.AddScoped<ExtractionService>();
 builder.Services.AddScoped<ProposalEngine>();
+builder.Services.Configure<PushOptions>(builder.Configuration.GetSection(PushOptions.Section));
+if (string.IsNullOrEmpty(builder.Configuration["Push:FcmProjectId"]))
+{
+    builder.Services.AddSingleton<IPushSender, LoggingPushSender>();
+}
+else
+{
+    builder.Services.AddHttpClient<IPushSender, FcmPushSender>();
+}
+
+builder.Services.AddHallyJobs(builder.Configuration, connectionString);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
 {
@@ -109,6 +121,7 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.UseHallyJobs();
 app.MapHealthChecks("/health/live", new() { Predicate = _ => false });
 app.MapHealthChecks("/health/ready", new() { Predicate = c => c.Tags.Contains("ready") });
 

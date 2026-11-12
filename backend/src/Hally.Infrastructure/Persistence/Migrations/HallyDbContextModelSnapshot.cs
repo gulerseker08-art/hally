@@ -315,6 +315,178 @@ namespace Hally.Infrastructure.Persistence.Migrations
                     b.ToTable("invitations", (string)null);
                 });
 
+            modelBuilder.Entity("Hally.Domain.Notifications.Device", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTimeOffset>("LastSeenAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_seen_at");
+
+                    b.Property<string>("Platform")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("platform");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)")
+                        .HasColumnName("token");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_devices");
+
+                    b.HasIndex("Token")
+                        .IsUnique()
+                        .HasDatabaseName("ix_devices_token");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_devices_user_id");
+
+                    b.ToTable("devices", (string)null);
+                });
+
+            modelBuilder.Entity("Hally.Domain.Notifications.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("body");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("DedupKey")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)")
+                        .HasColumnName("dedup_key");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("kind");
+
+                    b.Property<DateTimeOffset?>("ReadAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("read_at");
+
+                    b.Property<Guid?>("TargetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("target_id");
+
+                    b.Property<string>("TargetKind")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("target_kind");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("title");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_notifications");
+
+                    b.HasIndex("DedupKey")
+                        .IsUnique()
+                        .HasDatabaseName("ix_notifications_dedup_key");
+
+                    b.HasIndex("FamilyId")
+                        .HasDatabaseName("ix_notifications_family_id");
+
+                    b.HasIndex("UserId", "CreatedAt")
+                        .HasDatabaseName("ix_notifications_user_id_created_at");
+
+                    b.ToTable("notifications", (string)null);
+                });
+
+            modelBuilder.Entity("Hally.Domain.Notifications.Reminder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by_user_id");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<DateTimeOffset>("FireAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("fire_at");
+
+                    b.Property<Guid?>("RecipientUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("recipient_user_id");
+
+                    b.Property<DateTimeOffset?>("SentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_at");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<string>("Target")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("target");
+
+                    b.Property<Guid>("TargetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("target_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_reminders");
+
+                    b.HasIndex("FamilyId", "TargetId")
+                        .HasDatabaseName("ix_reminders_family_id_target_id");
+
+                    b.HasIndex("Status", "FireAt")
+                        .HasDatabaseName("ix_reminders_status_fire_at");
+
+                    b.ToTable("reminders", (string)null);
+                });
+
             modelBuilder.Entity("Hally.Domain.Planning.AuditEntry", b =>
                 {
                     b.Property<Guid>("Id")
@@ -603,6 +775,18 @@ namespace Hally.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(320)")
                         .HasColumnName("email");
 
+                    b.Property<bool>("EveningPrepEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("evening_prep_enabled");
+
+                    b.Property<int>("EveningPrepHour")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(20)
+                        .HasColumnName("evening_prep_hour");
+
                     b.Property<string>("Locale")
                         .IsRequired()
                         .HasMaxLength(5)
@@ -758,6 +942,43 @@ namespace Hally.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_invitations_families_family_id");
 
                     b.Navigation("Family");
+                });
+
+            modelBuilder.Entity("Hally.Domain.Notifications.Device", b =>
+                {
+                    b.HasOne("Hally.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_devices_users_user_id");
+                });
+
+            modelBuilder.Entity("Hally.Domain.Notifications.Notification", b =>
+                {
+                    b.HasOne("Hally.Domain.Families.Family", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_notifications_families_family_id");
+
+                    b.HasOne("Hally.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_notifications_users_user_id");
+                });
+
+            modelBuilder.Entity("Hally.Domain.Notifications.Reminder", b =>
+                {
+                    b.HasOne("Hally.Domain.Families.Family", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_reminders_families_family_id");
                 });
 
             modelBuilder.Entity("Hally.Domain.Planning.CalendarEvent", b =>

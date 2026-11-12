@@ -29,6 +29,8 @@ services:
       Ai__ApiKey: ${AI_API_KEY:-}
       Ai__VisionModel: ${AI_VISION_MODEL:-}
       Storage__Root: /data/documents
+      Push__FcmProjectId: ${FCM_PROJECT_ID:-}
+      Push__FcmServiceAccountJson: ${FCM_SERVICE_ACCOUNT_JSON:-}
       Storage__EncryptionKey: ${STORAGE_ENCRYPTION_KEY:?set STORAGE_ENCRYPTION_KEY in .env}
     ports: ["8080:8080"]
     volumes: [documents:/data/documents]

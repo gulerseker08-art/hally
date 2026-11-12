@@ -83,6 +83,11 @@ approval screen. The Dart side is in `mobile/lib/features/share`; the native sha
 **Demo scan.** Before sign-up, the user scans a sample school notice and sees what Hally finds. If they continue, the sample is
 saved as their first capture right after the family is created, still waiting for approval.
 
+## Reminders & background jobs (Sprint 3)
+
+Reminders, the evening prep summary and data retention run as Hangfire jobs. Push goes through FCM once it is configured. See
+[docs/mobile/push.md](docs/mobile/push.md).
+
 ## API
 
 | Method | Path | Notes |
@@ -104,6 +109,10 @@ saved as their first capture right after the family is created, still waiting fo
 | GET/POST/PUT | `/api/v1/families/{id}/tasks` · `/{tid}/complete` · `/reopen` · `/cancel` | Tasks |
 | GET/POST/PUT/DELETE | `/api/v1/families/{id}/events` | Events, with conflict detection |
 | GET | `/api/v1/families/{id}/today` | Overdue, due today, events, waiting proposals |
+| GET/POST/DELETE | `/api/v1/families/{id}/reminders` | Reminders for a task or event (for me or every adult) |
+| PUT/DELETE | `/api/v1/me/devices` | Register or unregister a push token |
+| GET | `/api/v1/me/notifications` · POST `/read-all` | Inbox (reminders, evening prep) |
+| GET/PUT | `/api/v1/me/notification-settings` | Evening prep on/off and hour (16–22) |
 
 All state-changing POSTs except auth require an `Idempotency-Key` header. Errors are RFC 9457 problem details with a `code` extension.
 

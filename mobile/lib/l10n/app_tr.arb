@@ -232,5 +232,19 @@
   "taskAdd": "Görev ekle",
   "taskReopen": "Geri al",
   "taskNoDate": "Tarihsiz",
-  "shareReceived": "Paylaşılan içerik okunuyor…"
+  "shareReceived": "Paylaşılan içerik okunuyor…",
+  "reminderTitle": "Hatırlat",
+  "reminder15Before": "15 dakika önce",
+  "reminderHourBefore": "1 saat önce",
+  "reminderMorningOf": "O gün sabah 08:00",
+  "reminderEveningBefore": "Önceki akşam 20:00",
+  "reminderCustom": "Tarih ve saat seç",
+  "reminderEveryone": "Tüm yetişkinlere hatırlat",
+  "reminderSet": "Hatırlatma kuruldu",
+  "notificationsTitle": "Bildirimler",
+  "notificationsEmpty": "Henüz bildirim yok",
+  "notificationsEmptyBody": "Kurduğun hatırlatmalar ve akşam özetleri burada görünür.",
+  "eveningPrepTitle": "Akşam hazırlık özeti",
+  "eveningPrepBody": "Her akşam yarının görev ve etkinliklerini kısaca özetler.",
+  "eveningPrepHour": "Gönderim saati"
 }

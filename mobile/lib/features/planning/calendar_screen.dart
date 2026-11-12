@@ -6,6 +6,7 @@ import '../../core/auth/auth_repository.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
+import '../notifications/reminder_sheet.dart';
 import 'planning_repository.dart';
 
 /// Week strip + the selected day's events. Events come from approved proposals or manual entry.
@@ -88,6 +89,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           leading: const HallyIconBadge(icon: Icons.event_rounded, color: HallyColors.apricot),
                           title: Text(e.title, style: theme.textTheme.titleSmall),
                           subtitle: Text(e.allDay ? l10n.reviewAllDay : TimeOfDay.fromDateTime(e.startsAt).format(context)),
+                          trailing: IconButton(
+                            key: Key('event.${e.id}.remind'),
+                            icon: const Icon(Icons.notification_add_outlined),
+                            tooltip: l10n.reminderTitle,
+                            onPressed: () => showReminderSheet(context, ref,
+                                familyId: familyId, target: 'Event', targetId: e.id, title: e.title, at: e.startsAt, allDay: e.allDay),
+                          ),
                         ),
                       ),
                   ],
