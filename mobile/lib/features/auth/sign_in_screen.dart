@@ -55,13 +55,18 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       appBar: AppBar(),
       body: HallyPage(
         children: [
+          const SizedBox(height: HallySpace.md),
+          const Align(alignment: Alignment.centerLeft, child: HallyLogo(size: 64)),
+          const SizedBox(height: HallySpace.lg),
           Text(l10n.signInTitle, style: Theme.of(context).textTheme.headlineMedium),
+          const SizedBox(height: HallySpace.sm),
+          Text(l10n.signInSubtitle, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           const SizedBox(height: HallySpace.xl),
           if (_busy) const HallyLoading(),
           if (!_busy) ...[
             FilledButton.icon(
               key: const Key('signIn.google'),
-              icon: const Icon(Icons.g_mobiledata),
+              icon: const Icon(Icons.g_mobiledata, size: 30),
               onPressed: () => _run('google', (r, l) => r.signInWithGoogle(l)),
               label: Text(l10n.signInGoogle),
             ),
