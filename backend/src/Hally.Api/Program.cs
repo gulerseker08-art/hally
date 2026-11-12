@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hally.Api.Auth;
 using Hally.Api.Common;
+using Hally.Api.Features.Assistant;
 using Hally.Api.Features.Captures;
 using Hally.Api.Features.Demo;
 using Hally.Api.Features.Notifications;
@@ -46,6 +47,8 @@ builder.Services.AddSingleton<IExternalIdentityVerifier, GoogleIdentityVerifier>
 builder.Services.AddSingleton<IExternalIdentityVerifier, AppleIdentityVerifier>();
 builder.Services.AddSingleton<IExternalIdentityVerifier, DevIdentityVerifier>();
 builder.Services.AddHttpClient<IVisionModel, OpenAiCompatibleVisionModel>();
+builder.Services.AddHttpClient<IChatModel, OpenAiCompatibleChatModel>();
+builder.Services.AddScoped<AssistantService>();
 builder.Services.AddSingleton<IDocumentStore, EncryptedFileDocumentStore>();
 builder.Services.AddScoped<ExtractionService>();
 builder.Services.AddScoped<ProposalEngine>();
@@ -96,6 +99,16 @@ builder.Services.AddRateLimiter(o =>
             Window = TimeSpan.FromHours(1),
             QueueLimit = 0,
         }));
+
+    // Fair use for chat: per signed-in user.
+    o.AddPolicy(AssistantController.RateLimitPolicy, ctx => RateLimitPartition.GetFixedWindowLimiter(
+        ctx.User.FindFirst("sub")?.Value ?? ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = builder.Configuration.GetValue("Assistant:MessagesPerHour", 60),
+            Window = TimeSpan.FromHours(1),
+            QueueLimit = 0,
+        }));
 });
 builder.Services.AddHealthChecks().AddNpgSql(connectionString, name: "postgres", tags: ["ready"]);
 
@@ -117,8 +130,8 @@ if (!app.Environment.IsProduction())
     app.UseSwaggerUI();
 }
 
-app.UseRateLimiter();
 app.UseAuthentication();
+app.UseRateLimiter(); // after authentication so the assistant limit is per user
 app.UseAuthorization();
 app.MapControllers();
 app.UseHallyJobs();

@@ -60,7 +60,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                       subtitle: Text('${n.body}\n${DateFormat.MMMd(locale).add_Hm().format(n.createdAt)}'),
                       isThreeLine: true,
                       onTap: switch (n.targetKind) {
-                        'Task' => () => context.go('/tasks'),
+                        'Task' => () => context.push('/tasks'),
                         'Event' => () => context.go('/calendar'),
                         _ => () => context.go('/today'),
                       },

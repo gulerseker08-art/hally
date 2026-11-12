@@ -28,6 +28,7 @@ services:
       Ai__BaseUrl: ${AI_BASE_URL:-}
       Ai__ApiKey: ${AI_API_KEY:-}
       Ai__VisionModel: ${AI_VISION_MODEL:-}
+      Ai__ChatModel: ${AI_CHAT_MODEL:-}
       Storage__Root: /data/documents
       Push__FcmProjectId: ${FCM_PROJECT_ID:-}
       Push__FcmServiceAccountJson: ${FCM_SERVICE_ACCOUNT_JSON:-}

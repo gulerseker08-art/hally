@@ -13,6 +13,7 @@ import 'features/family/family_setup_screen.dart';
 import 'features/family/invite_partner_screen.dart';
 import 'features/family/join_family_screen.dart';
 import 'features/home/home_shell.dart';
+import 'features/assistant/assistant_screen.dart';
 import 'features/home/today_screen.dart';
 import 'features/notifications/notifications_screen.dart';
 import 'features/sharing/weekly_card_screen.dart';
@@ -80,14 +81,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/capture/text', builder: (_, __) => const CaptureTextScreen()),
       GoRoute(path: '/capture/review', builder: (_, __) => const ReviewScreen()),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
+      GoRoute(path: '/tasks', builder: (_, __) => const TasksScreen()),
       GoRoute(path: '/weekly-card', builder: (_, __) => const WeeklyCardScreen()),
       GoRoute(path: '/share-links', builder: (_, __) => const ShareLinksScreen()),
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => HomeShell(shell: shell),
         branches: [
           StatefulShellBranch(routes: [GoRoute(path: '/today', builder: (_, __) => const TodayScreen())]),
+          StatefulShellBranch(routes: [GoRoute(path: '/assistant', builder: (_, __) => const AssistantScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/calendar', builder: (_, __) => const CalendarScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: '/tasks', builder: (_, __) => const TasksScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/family', builder: (_, __) => const FamilyScreen())]),
         ],
       ),

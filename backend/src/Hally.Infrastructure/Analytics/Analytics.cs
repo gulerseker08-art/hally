@@ -34,6 +34,7 @@ public static class AnalyticsEvents
     public const string HelperLinkCreated = "helper_link_created";
     public const string HelperLinkOpened = "helper_link_opened";
     public const string HelperTaskCompleted = "helper_task_completed";
+    public const string AssistantReplied = "assistant_replied";
 }
 
 public class AnalyticsEvent
