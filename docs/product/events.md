@@ -16,7 +16,7 @@ Events never contain PII: no names, emails, child names or free text. Ids are in
 | `child_added` | api | |
 | `capture_started` | api, app | `source` (camera, gallery, screenshot, share, text) |
 | `document_scanned` | api | `type` (image, text) |
-| `proposal_shown` | api | `count` |
+| `proposal_shown` | api | `count`, `source` (chat) |
 | `proposal_approved` | api, app | `kind`, `edited`, `count` |
 | `proposal_rejected` | api, app | |
 | `task_created` / `event_created` | api | `source` (manual) |
@@ -28,5 +28,6 @@ Events never contain PII: no names, emails, child names or free text. Ids are in
 | `helper_link_opened` | api | `kind` |
 | `helper_task_completed` | api | |
 | `summary_card_shared` | app | `offset`, `children` |
+| `assistant_replied` | api | `tool_calls`, `proposals`, `fallback`, `tokens` |
 
 Planned for later sprints: `onboarding_completed`, `paywall_*`.

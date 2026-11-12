@@ -14,6 +14,9 @@ public class AiOptions
     public string BaseUrl { get; set; } = string.Empty;
     public string ApiKey { get; set; } = string.Empty;
     public string VisionModel { get; set; } = string.Empty;
+
+    /// <summary>Model for the assistant chat (tool calling). Falls back to <see cref="VisionModel"/>.</summary>
+    public string ChatModel { get; set; } = string.Empty;
     public int TimeoutSeconds { get; set; } = 60;
 
     public bool IsConfigured => !string.IsNullOrWhiteSpace(BaseUrl) && !string.IsNullOrWhiteSpace(ApiKey) && !string.IsNullOrWhiteSpace(VisionModel);

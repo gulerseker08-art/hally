@@ -166,5 +166,16 @@
   "familyWeeklyCard": "Our week",
   "familyWeeklyCardBody": "A shareable weekly card",
   "familyHelperLinks": "Shared links",
-  "familyHelperLinksBody": "Active links shared with helpers"
+  "familyHelperLinksBody": "Active links shared with helpers",
+  "tabAssistant": "Hally",
+  "assistantEmptyTitle": "Ask Hally",
+  "assistantEmptyBody": "Answers from your family's tasks and events. Anything to add comes to you for approval first.",
+  "assistantStarterTomorrow": "What do we need tomorrow?",
+  "assistantStarterWeek": "What's on this week?",
+  "assistantStarterAdd": "Add swimming tomorrow at 17:00",
+  "assistantHint": "Ask, or say what to add",
+  "assistantSend": "Send",
+  "assistantReview": "Review and approve",
+  "assistantError": "I couldn't answer right now. Could you try again in a bit?",
+  "todayAllTasks": "All tasks"
 }

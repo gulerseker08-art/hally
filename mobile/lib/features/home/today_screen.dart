@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../notifications/notifications_screen.dart';
 import '../../core/auth/auth_repository.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../capture/capture_repository.dart';
 import '../capture/capture_sheet.dart';
+import '../notifications/notifications_screen.dart';
 import '../planning/planning_repository.dart';
 
 class TodayScreen extends ConsumerWidget {
@@ -144,6 +144,12 @@ class TodayHero extends StatelessWidget {
                           date.toUpperCase(),
                           style: theme.textTheme.labelMedium?.copyWith(color: Colors.white70, letterSpacing: 1.2, fontWeight: FontWeight.w700),
                         ),
+                      ),
+                      IconButton(
+                        key: const Key('today.tasks'),
+                        tooltip: l10n.todayAllTasks,
+                        onPressed: () => context.push('/tasks'),
+                        icon: const Icon(Icons.checklist_rounded, color: Colors.white),
                       ),
                       const NotificationBell(),
                       const SizedBox(width: HallySpace.xs),

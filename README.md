@@ -88,6 +88,15 @@ saved as their first capture right after the family is created, still waiting fo
 Reminders, the evening prep summary and data retention run as Hangfire jobs. Push goes through FCM once it is configured. See
 [docs/mobile/push.md](docs/mobile/push.md).
 
+## Assistant chat (Sprint 3)
+
+Hally answers questions such as "Yarın ne lazım?" using read tools (`get_family_context`, `list_tasks`, `list_events`). The family id is never
+a tool argument, so the model can only see the caller's own family. To add something, the model calls `propose_task` or `propose_event`. These are
+re-validated like captured content (the server resolves dates from the user's own words) and become **pending proposals**. Nothing is written until
+a parent approves. Chats are private to each adult. Token usage is stored per message, so cost can be tracked per family.
+The model is `Ai:ChatModel` (`AI_CHAT_MODEL`), or the vision model if that is not set. When no AI provider is configured or it is down, questions about a day
+("yarın", "bugün", "bu hafta", "haftaya cuma") are answered straight from the family's data, including "Gerekenler" lists from school notices.
+
 ## Helper links & weekly card (Sprint 3)
 
 Grandparents, nannies and drivers don't need the app. A parent shares one task or a whole day through a link
@@ -123,6 +132,8 @@ The weekly card is drawn on the server with SkiaSharp and bundled OFL fonts (`ba
 | GET/PUT | `/api/v1/me/notification-settings` | Evening prep on/off and hour (16–22) |
 | GET/POST/DELETE | `/api/v1/families/{id}/share-links` | Helper links for one task or one day (72h default, max 7 days, revocable) |
 | GET · POST | `/s/{token}` · `/s/{token}/tasks/{tid}/done` | Public helper page (no account); mark a shared task done |
+| POST | `/api/v1/families/{id}/assistant/messages` | Chat with Hally (read tools + suggestions), rate limited per user (`Assistant:MessagesPerHour`) |
+| GET | `/api/v1/families/{id}/assistant/conversations` · `/{cid}/messages` | The caller's own chat history |
 | GET | `/api/v1/families/{id}/weekly-summary` · `/card.png` | Week stats and a 1080×1350 shareable card (child names only with `includeChildNames=true`) |
 
 All state-changing POSTs except auth require an `Idempotency-Key` header. Errors are RFC 9457 problem details with a `code` extension.

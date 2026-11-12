@@ -25,6 +25,7 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
     public TestClock Clock { get; } = new();
     public FakeVisionModel Ai { get; } = new();
     public RecordingPushSender Push { get; } = new();
+    public FakeChatModel Chat { get; } = new();
     public string StorageRoot { get; } = Path.Combine(Path.GetTempPath(), $"hally-docs-{Guid.NewGuid():N}");
 
     public async Task InitializeAsync()
@@ -64,6 +65,8 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
             s.AddSingleton<IVisionModel>(Ai);
             s.RemoveAll<IPushSender>();
             s.AddSingleton<IPushSender>(Push);
+            s.RemoveAll<IChatModel>();
+            s.AddSingleton<IChatModel>(Chat);
         });
     }
 
@@ -156,5 +159,22 @@ public sealed class RecordingPushSender : IPushSender
         }
 
         return Task.FromResult<IReadOnlyList<string>>(tokens.Where(t => t.StartsWith("dead", StringComparison.Ordinal)).ToList());
+    }
+}
+
+/// <summary>Scriptable chat model. <see cref="Respond"/> sees the full message list (including tool results) for each round.</summary>
+public sealed class FakeChatModel : IChatModel
+{
+    public Func<IReadOnlyList<ChatTurn>, ChatCompletion> Respond { get; set; } = _ => throw new AiUnavailableException("not configured in this test");
+    public List<IReadOnlyList<ChatTurn>> Calls { get; } = [];
+
+    public Task<ChatCompletion> CompleteAsync(IReadOnlyList<ChatTurn> messages, IReadOnlyList<ChatTool> tools, CancellationToken ct)
+    {
+        lock (Calls)
+        {
+            Calls.Add(messages.ToList());
+        }
+
+        return Task.FromResult(Respond(messages));
     }
 }

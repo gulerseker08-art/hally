@@ -295,5 +295,16 @@
         "type": "int"
       }
     }
-  }
+  },
+  "tabAssistant": "Hally",
+  "assistantEmptyTitle": "Hally'ye sor",
+  "assistantEmptyBody": "Ailenin görev ve etkinliklerine bakarak yanıtlar. Eklemek istediklerin önce onayına gelir.",
+  "assistantStarterTomorrow": "Yarın ne lazım?",
+  "assistantStarterWeek": "Bu hafta ne var?",
+  "assistantStarterAdd": "Yarın 17:00'de yüzme dersi ekle",
+  "assistantHint": "Sor ya da ekletmek istediğini yaz",
+  "assistantSend": "Gönder",
+  "assistantReview": "İncele ve onayla",
+  "assistantError": "Şu an yanıt veremedim. Biraz sonra tekrar dener misin?",
+  "todayAllTasks": "Tüm görevler"
 }

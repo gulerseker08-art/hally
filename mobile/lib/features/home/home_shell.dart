@@ -8,7 +8,7 @@ import '../../l10n/gen/app_localizations.dart';
 import '../capture/capture_sheet.dart';
 import '../share/share_listener.dart';
 
-/// Tabs: Today · Calendar · Capture (raised centre action, opens the capture sheet) · Tasks · Family.
+/// Tabs: Today · Hally (chat) · Capture (raised centre action, opens the capture sheet) · Calendar · Family.
 class HomeShell extends ConsumerWidget {
   const HomeShell({super.key, required this.shell});
 
@@ -29,8 +29,8 @@ class HomeShell extends ConsumerWidget {
         currentIndex: shell.currentIndex,
         items: [
           HallyNavItem(icon: Icons.wb_sunny_outlined, activeIcon: Icons.wb_sunny_rounded, label: l10n.tabToday),
+          HallyNavItem(icon: Icons.auto_awesome_outlined, activeIcon: Icons.auto_awesome_rounded, label: l10n.tabAssistant),
           HallyNavItem(icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month_rounded, label: l10n.tabCalendar),
-          HallyNavItem(icon: Icons.checklist_outlined, activeIcon: Icons.checklist_rounded, label: l10n.tabTasks),
           HallyNavItem(icon: Icons.people_alt_outlined, activeIcon: Icons.people_alt_rounded, label: l10n.tabFamily),
         ],
         centerLabel: l10n.tabCapture,
