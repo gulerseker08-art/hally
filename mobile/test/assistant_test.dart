@@ -52,11 +52,19 @@ Widget _app(_FakeAssistant repo) => ProviderScope(
 
 void main() {
   testWidgets('starter question gets an answer and the conversation continues', (tester) async {
+    // A phone-sized surface: the default 800x600 test window leaves the starters under the input bar.
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
     final repo = _FakeAssistant();
     await tester.pumpWidget(_app(repo));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('assistant.starter.0')));
+    final starter = find.byKey(const Key('assistant.starter.0'));
+    await tester.ensureVisible(starter);
+    await tester.pumpAndSettle();
+    await tester.tap(starter);
     await tester.pumpAndSettle();
     expect(find.text('Yarın ne lazım?'), findsOneWidget);
     expect(find.text('Yarın: Okul gezisi (09:00)'), findsOneWidget);
