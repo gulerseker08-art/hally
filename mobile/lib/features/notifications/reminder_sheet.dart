@@ -22,6 +22,7 @@ Future<void> showReminderSheet(
   final picked = await showModalBottomSheet<(DateTime, bool)>(
     context: context,
     showDragHandle: true,
+    isScrollControlled: true,
     builder: (_) => _ReminderSheet(title: title, at: at, allDay: allDay),
   );
   if (picked == null) return;
@@ -71,7 +72,7 @@ class _ReminderSheetState extends State<_ReminderSheet> {
     final locale = Localizations.localeOf(context).toLanguageTag();
     final presets = reminderPresets(widget.at, widget.allDay, DateTime.now());
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(HallySpace.md, 0, HallySpace.md, HallySpace.md),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -79,6 +80,13 @@ class _ReminderSheetState extends State<_ReminderSheet> {
           children: [
             Text(l10n.reminderTitle, style: theme.textTheme.titleLarge),
             Text(widget.title, style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            SwitchListTile(
+              key: const Key('reminder.everyone'),
+              contentPadding: EdgeInsets.zero,
+              value: _everyone,
+              title: Text(l10n.reminderEveryone),
+              onChanged: (v) => setState(() => _everyone = v),
+            ),
             const SizedBox(height: HallySpace.sm),
             for (final (preset, at) in presets)
               ListTile(
@@ -95,13 +103,6 @@ class _ReminderSheetState extends State<_ReminderSheet> {
               leading: const Icon(Icons.edit_calendar_rounded),
               title: Text(l10n.reminderCustom),
               onTap: _custom,
-            ),
-            SwitchListTile(
-              key: const Key('reminder.everyone'),
-              contentPadding: EdgeInsets.zero,
-              value: _everyone,
-              title: Text(l10n.reminderEveryone),
-              onChanged: (v) => setState(() => _everyone = v),
             ),
           ],
         ),

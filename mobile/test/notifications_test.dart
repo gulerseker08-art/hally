@@ -106,6 +106,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('reminder.everyone')));
     await tester.pump();
+    await tester.ensureVisible(find.byKey(const Key('reminder.hourBefore')));
     await tester.tap(find.byKey(const Key('reminder.hourBefore')));
     await tester.pumpAndSettle();
 
