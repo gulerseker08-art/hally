@@ -15,9 +15,9 @@ class TrustScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final points = [
-      (Icons.verified_user_outlined, HallyColors.lavender, l10n.trustPoint1),
-      (Icons.lock_outline, HallyColors.mint, l10n.trustPoint2),
-      (Icons.delete_outline, HallyColors.apricot, l10n.trustPoint3),
+      (Icons.visibility_rounded, HallyColors.lavender, l10n.trustPoint1),
+      (Icons.lock_rounded, HallyColors.mint, l10n.trustPoint2),
+      (Icons.delete_sweep_rounded, HallyColors.apricot, l10n.trustPoint3),
     ];
     return Scaffold(
       appBar: AppBar(),
@@ -31,18 +31,41 @@ class TrustScreen extends ConsumerWidget {
           child: Text(l10n.trustContinue),
         ),
         children: [
-          Text(l10n.trustTitle, style: Theme.of(context).textTheme.headlineMedium),
+          const SizedBox(height: HallySpace.md),
+          Center(
+            child: Container(
+              width: 112,
+              height: 112,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: HallyColors.softOf(HallyColors.lavender, Theme.of(context).brightness)),
+              alignment: Alignment.center,
+              child: const HallyIconBadge(
+                icon: Icons.shield_rounded,
+                color: HallyColors.lavender,
+                gradient: HallyGradients.hero,
+                size: 72,
+                glow: true,
+              ),
+            ),
+          ),
           const SizedBox(height: HallySpace.lg),
-          for (final (icon, color, text) in points)
-            Padding(
-              padding: const EdgeInsets.only(bottom: HallySpace.md),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(icon, color: color),
-                  const SizedBox(width: HallySpace.md),
-                  Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
-                ],
+          Text(l10n.trustTitle, style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
+          const SizedBox(height: HallySpace.sm),
+          Text(l10n.trustSubtitle, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant), textAlign: TextAlign.center),
+          const SizedBox(height: HallySpace.lg),
+          for (final (i, (icon, color, text)) in points.indexed)
+            HallyEntrance(
+              index: i + 1,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(HallySpace.md),
+                  child: Row(
+                    children: [
+                      HallyIconBadge(icon: icon, color: color, size: 44),
+                      const SizedBox(width: HallySpace.md),
+                      Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500))),
+                    ],
+                  ),
+                ),
               ),
             ),
         ],
