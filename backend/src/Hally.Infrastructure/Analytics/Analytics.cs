@@ -28,6 +28,9 @@ public static class AnalyticsEvents
     public const string TaskCreated = "task_created";
     public const string TaskCompleted = "task_completed";
     public const string EventCreated = "event_created";
+    public const string ReminderCreated = "reminder_created";
+    public const string ReminderSent = "reminder_sent";
+    public const string EveningPrepSent = "evening_prep_sent";
 }
 
 public class AnalyticsEvent

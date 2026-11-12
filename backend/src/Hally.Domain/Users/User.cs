@@ -20,6 +20,22 @@ public class User : Entity
     public string Locale { get; private set; } = Locales.Turkish;
     public IReadOnlyCollection<ExternalLogin> Logins => _logins;
 
+    /// <summary>Evening prep: a short "tomorrow" summary pushed at <see cref="EveningPrepHour"/> family-local time.</summary>
+    public bool EveningPrepEnabled { get; private set; } = true;
+
+    public int EveningPrepHour { get; private set; } = 20;
+
+    public void UpdateNotificationSettings(bool eveningPrepEnabled, int eveningPrepHour)
+    {
+        if (eveningPrepHour is < 16 or > 22)
+        {
+            throw new DomainException("user.prep_hour_invalid", "Evening prep hour must be between 16 and 22.");
+        }
+
+        EveningPrepEnabled = eveningPrepEnabled;
+        EveningPrepHour = eveningPrepHour;
+    }
+
     public void LinkLogin(string provider, string subject)
     {
         if (_logins.Any(l => l.Provider == provider && l.Subject == subject))

@@ -131,5 +131,19 @@
   "taskAdd": "Add task",
   "taskReopen": "Undo",
   "taskNoDate": "No date",
-  "shareReceived": "Reading what you shared…"
+  "shareReceived": "Reading what you shared…",
+  "reminderTitle": "Remind me",
+  "reminder15Before": "15 minutes before",
+  "reminderHourBefore": "1 hour before",
+  "reminderMorningOf": "That morning at 08:00",
+  "reminderEveningBefore": "The evening before at 20:00",
+  "reminderCustom": "Pick date and time",
+  "reminderEveryone": "Remind every adult",
+  "reminderSet": "Reminder set",
+  "notificationsTitle": "Notifications",
+  "notificationsEmpty": "No notifications yet",
+  "notificationsEmptyBody": "Your reminders and evening summaries show up here.",
+  "eveningPrepTitle": "Evening prep summary",
+  "eveningPrepBody": "Each evening, a short summary of tomorrow's tasks and events.",
+  "eveningPrepHour": "Send at"
 }

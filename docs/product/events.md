@@ -21,5 +21,8 @@ Events never contain PII: no names, emails, child names or free text. Ids are in
 | `proposal_rejected` | api, app | |
 | `task_created` / `event_created` | api | `source` (manual) |
 | `task_completed` | api | |
+| `reminder_created` | api | `target` (task, event), `for_everyone` |
+| `reminder_sent` | api | `target` |
+| `evening_prep_sent` | api | `tasks`, `events` (counts) |
 
-Planned for later sprints: `onboarding_completed`, `reminder_*`, `paywall_*`, `share_link_*`.
+Planned for later sprints: `onboarding_completed`, `paywall_*`, `share_link_*`.

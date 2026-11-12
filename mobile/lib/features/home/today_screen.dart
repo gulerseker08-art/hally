@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../notifications/notifications_screen.dart';
 import '../../core/auth/auth_repository.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
@@ -144,6 +145,8 @@ class TodayHero extends StatelessWidget {
                           style: theme.textTheme.labelMedium?.copyWith(color: Colors.white70, letterSpacing: 1.2, fontWeight: FontWeight.w700),
                         ),
                       ),
+                      const NotificationBell(),
+                      const SizedBox(width: HallySpace.xs),
                       HallyAvatar(name: name, size: 40, ring: true),
                     ],
                   ),

@@ -14,6 +14,7 @@ import 'features/family/invite_partner_screen.dart';
 import 'features/family/join_family_screen.dart';
 import 'features/home/home_shell.dart';
 import 'features/home/today_screen.dart';
+import 'features/notifications/notifications_screen.dart';
 import 'features/planning/calendar_screen.dart';
 import 'features/planning/tasks_screen.dart';
 import 'features/onboarding/trust_screen.dart';
@@ -77,6 +78,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/family/:id/invite', builder: (_, s) => InvitePartnerScreen(familyId: s.pathParameters['id']!)),
       GoRoute(path: '/capture/text', builder: (_, __) => const CaptureTextScreen()),
       GoRoute(path: '/capture/review', builder: (_, __) => const ReviewScreen()),
+      GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => HomeShell(shell: shell),
         branches: [

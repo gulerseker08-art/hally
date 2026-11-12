@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Hally.Api.Features.Notifications;
 using Hally.Infrastructure.Ai;
 using Hally.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
@@ -23,6 +24,7 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
 
     public TestClock Clock { get; } = new();
     public FakeVisionModel Ai { get; } = new();
+    public RecordingPushSender Push { get; } = new();
     public string StorageRoot { get; } = Path.Combine(Path.GetTempPath(), $"hally-docs-{Guid.NewGuid():N}");
 
     public async Task InitializeAsync()
@@ -52,6 +54,7 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseSetting("App:PublicBaseUrl", "https://hally.test");
         builder.UseSetting("Storage:Root", StorageRoot);
         builder.UseSetting("Demo:ScansPerHour", "5");
+        builder.UseSetting("Jobs:Enabled", "false");
         builder.UseSetting("Storage:EncryptionKey", Convert.ToBase64String(new byte[32].Select((_, i) => (byte)i).ToArray()));
         builder.ConfigureServices(s =>
         {
@@ -59,6 +62,8 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
             s.AddSingleton<TimeProvider>(Clock);
             s.RemoveAll<IVisionModel>();
             s.AddSingleton<IVisionModel>(Ai);
+            s.RemoveAll<IPushSender>();
+            s.AddSingleton<IPushSender>(Push);
         });
     }
 
@@ -135,5 +140,21 @@ public sealed class FakeVisionModel : IVisionModel
         }
 
         return Task.FromResult(JsonDocument.Parse(Respond(request)));
+    }
+}
+
+/// <summary>Captures pushes; tokens starting with "dead" are reported invalid, like FCM UNREGISTERED.</summary>
+public sealed class RecordingPushSender : IPushSender
+{
+    public List<(string Token, PushMessage Message)> Sent { get; } = [];
+
+    public Task<IReadOnlyList<string>> SendAsync(IReadOnlyList<string> tokens, PushMessage message, CancellationToken ct)
+    {
+        lock (Sent)
+        {
+            Sent.AddRange(tokens.Select(t => (t, message)));
+        }
+
+        return Task.FromResult<IReadOnlyList<string>>(tokens.Where(t => t.StartsWith("dead", StringComparison.Ordinal)).ToList());
     }
 }
