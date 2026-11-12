@@ -109,5 +109,87 @@
   "todayDue": "Bugün yapılacaklar",
   "todayEvents": "Bugünün etkinlikleri",
   "todayReview": "İncele",
-  "taskComplete": "Tamamlandı olarak işaretle"
+  "taskComplete": "Tamamlandı olarak işaretle",
+  "todayGreetingMorning": "Günaydın, {name}",
+  "@todayGreetingMorning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "todayGreetingAfternoon": "İyi günler, {name}",
+  "@todayGreetingAfternoon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "todayGreetingEvening": "İyi akşamlar, {name}",
+  "@todayGreetingEvening": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "todayStatTasks": "{count} görev",
+  "@todayStatTasks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStatEvents": "{count} etkinlik",
+  "@todayStatEvents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStatWaiting": "{count} öneri",
+  "@todayStatWaiting": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayWaitingBody": "Hally {count} öneri hazırladı. Bir bak, onayla.",
+  "@todayWaitingBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayQuickCapture": "Hızlı yakala",
+  "taskDoneToast": "Harika, bir iş daha bitti!",
+  "taskSwipeDone": "Tamamlandı",
+  "captureSubtitle": "Fotoğraf, ekran görüntüsü ya da mesaj. Gerisini ben hallederim.",
+  "captureCameraHint": "Duyuru, afiş, karne",
+  "captureGalleryHint": "Ekran görüntüsü, fotoğraf",
+  "captureTextShort": "WhatsApp, e-posta",
+  "captureStepRead": "Metni okuyorum…",
+  "captureStepDates": "Tarihleri buluyorum…",
+  "captureStepTasks": "Görevleri hazırlıyorum…",
+  "reviewLowConfidence": "Emin değilim",
+  "reviewEditTitle": "Başlığı düzenle",
+  "welcomeSample1": "Okul gezisi · Cuma 09:00",
+  "welcomeSample2": "Kırmızı tişört giydir",
+  "welcomeSample3": "Veli toplantısı eklendi",
+  "trustSubtitle": "Hally sana yardım eder, kararları sen verirsin.",
+  "signInSubtitle": "Tek dokunuşla giriş yap, ailenle birlikte planla.",
+  "familyHeroBody": "{count} kişi birlikte planlıyor",
+  "@familyHeroBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "familyInviteBody": "Yükü paylaşmak için eşini ya da partnerini ekle."
 }
