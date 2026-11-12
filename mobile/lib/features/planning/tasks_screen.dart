@@ -101,47 +101,9 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
   Future<void> _addTask(String familyId) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
-    final controller = TextEditingController();
-    DateTime? due;
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (c) => StatefulBuilder(
-        builder: (c, setDialogState) => AlertDialog(
-          title: Text(l10n.taskAdd),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(key: const Key('task.title'), controller: controller, autofocus: true, maxLength: 200),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.event),
-                title: Text(due == null ? l10n.taskNoDate : DateFormat.yMMMEd(Localizations.localeOf(c).toLanguageTag()).format(due!)),
-                onTap: () async {
-                  final picked = await showDatePicker(
-                    context: c,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now().subtract(const Duration(days: 1)),
-                    lastDate: DateTime.now().add(const Duration(days: 730)),
-                  );
-                  if (picked != null) setDialogState(() => due = picked);
-                },
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(c, false), child: Text(MaterialLocalizations.of(c).cancelButtonLabel)),
-            FilledButton(
-              style: FilledButton.styleFrom(minimumSize: const Size(64, 40)),
-              onPressed: () => Navigator.pop(c, controller.text.trim().isNotEmpty),
-              child: Text(l10n.eventSave),
-            ),
-          ],
-        ),
-      ),
-    );
-    final title = controller.text.trim();
-    controller.dispose();
-    if (ok != true) return;
+    final result = await showDialog<(String, DateTime?)>(context: context, builder: (_) => const _TaskDialog());
+    if (result == null) return;
+    final (title, due) = result;
     try {
       await ref.read(planningRepositoryProvider).createTask(familyId, title: title, dueDate: due);
       ref.invalidate(tasksProvider((familyId, 'Open')));
@@ -149,5 +111,65 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     } catch (_) {
       messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
     }
+  }
+}
+
+/// Owns its controller so it is disposed only after the dialog's exit animation.
+class _TaskDialog extends StatefulWidget {
+  const _TaskDialog();
+
+  @override
+  State<_TaskDialog> createState() => _TaskDialogState();
+}
+
+class _TaskDialogState extends State<_TaskDialog> {
+  final _title = TextEditingController();
+  DateTime? _due;
+
+  @override
+  void dispose() {
+    _title.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    return AlertDialog(
+      title: Text(l10n.taskAdd),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(key: const Key('task.title'), controller: _title, autofocus: true, maxLength: 200),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.event),
+            title: Text(_due == null ? l10n.taskNoDate : DateFormat.yMMMEd(locale).format(_due!)),
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now().subtract(const Duration(days: 1)),
+                lastDate: DateTime.now().add(const Duration(days: 730)),
+              );
+              if (picked != null) setState(() => _due = picked);
+            },
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: Text(MaterialLocalizations.of(context).cancelButtonLabel)),
+        FilledButton(
+          style: FilledButton.styleFrom(minimumSize: const Size(64, 40)),
+          onPressed: () {
+            final title = _title.text.trim();
+            if (title.isEmpty) return;
+            Navigator.pop(context, (title, _due));
+          },
+          child: Text(l10n.eventSave),
+        ),
+      ],
+    );
   }
 }
