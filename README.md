@@ -88,6 +88,14 @@ saved as their first capture right after the family is created, still waiting fo
 Reminders, the evening prep summary and data retention run as Hangfire jobs. Push goes through FCM once it is configured. See
 [docs/mobile/push.md](docs/mobile/push.md).
 
+## Helper links & weekly card (Sprint 3)
+
+Grandparents, nannies and drivers don't need the app. A parent shares one task or a whole day through a link
+(`/s/{token}`, a small server-rendered page). The link is read-only except for "mark as done", expires in 72 hours by default and can be turned off.
+Only the token's hash is stored. The page shows the sharer's first name, never the family name, and is sent with `no-store`, `no-referrer` and `noindex`.
+
+The weekly card is drawn on the server with SkiaSharp and bundled OFL fonts (`backend/src/Hally.Api/Assets/Fonts`). Child names appear only if the user turns them on.
+
 ## API
 
 | Method | Path | Notes |
@@ -113,6 +121,9 @@ Reminders, the evening prep summary and data retention run as Hangfire jobs. Pus
 | PUT/DELETE | `/api/v1/me/devices` | Register or unregister a push token |
 | GET | `/api/v1/me/notifications` · POST `/read-all` | Inbox (reminders, evening prep) |
 | GET/PUT | `/api/v1/me/notification-settings` | Evening prep on/off and hour (16–22) |
+| GET/POST/DELETE | `/api/v1/families/{id}/share-links` | Helper links for one task or one day (72h default, max 7 days, revocable) |
+| GET · POST | `/s/{token}` · `/s/{token}/tasks/{tid}/done` | Public helper page (no account); mark a shared task done |
+| GET | `/api/v1/families/{id}/weekly-summary` · `/card.png` | Week stats and a 1080×1350 shareable card (child names only with `includeChildNames=true`) |
 
 All state-changing POSTs except auth require an `Idempotency-Key` header. Errors are RFC 9457 problem details with a `code` extension.
 

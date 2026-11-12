@@ -246,5 +246,54 @@
   "notificationsEmptyBody": "Kurduğun hatırlatmalar ve akşam özetleri burada görünür.",
   "eveningPrepTitle": "Akşam hazırlık özeti",
   "eveningPrepBody": "Her akşam yarının görev ve etkinliklerini kısaca özetler.",
-  "eveningPrepHour": "Gönderim saati"
+  "eveningPrepHour": "Gönderim saati",
+  "helperShareTitle": "Yardımcıyla paylaş",
+  "helperShareBody": "\"{subject}\" için hesap gerektirmeyen bir link oluşturulur. Link 72 saat geçerli, istediğin an kapatabilirsin.",
+  "helperShareExpires": "Link {date} tarihine kadar geçerli",
+  "weeklyCardTitle": "Haftanın özeti",
+  "weeklyCardShare": "Kartı paylaş",
+  "weeklyThisWeek": "Bu hafta",
+  "weeklyLastWeek": "Geçen hafta",
+  "weeklyShowChildren": "Çocuk isimlerini göster",
+  "weeklyShowChildrenBody": "Kapalıyken kartta çocuk ismi yer almaz.",
+  "helperLinksTitle": "Paylaşım linkleri",
+  "helperLinksEmpty": "Aktif link yok",
+  "helperLinksEmptyBody": "Bir görevi veya günü yardımcıyla paylaştığında burada görünür.",
+  "helperLinkDay": "{date} günü",
+  "helperLinkTask": "Tek görev",
+  "helperLinkOpened": "{count} kez açıldı",
+  "helperLinkRevoke": "Kapat",
+  "calendarShareDay": "Bu günü paylaş",
+  "familyWeeklyCard": "Haftanın özeti",
+  "familyWeeklyCardBody": "Paylaşılabilir haftalık kart",
+  "familyHelperLinks": "Paylaşım linkleri",
+  "familyHelperLinksBody": "Yardımcılarla paylaşılan aktif linkler",
+  "@helperShareBody": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
+  },
+  "@helperShareExpires": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@helperLinkDay": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@helperLinkOpened": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

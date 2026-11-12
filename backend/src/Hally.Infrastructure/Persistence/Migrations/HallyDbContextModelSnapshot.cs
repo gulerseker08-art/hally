@@ -619,6 +619,10 @@ namespace Hally.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("completed_at");
 
+                    b.Property<bool>("CompletedByHelper")
+                        .HasColumnType("boolean")
+                        .HasColumnName("completed_by_helper");
+
                     b.Property<Guid?>("CompletedByUserId")
                         .HasColumnType("uuid")
                         .HasColumnName("completed_by_user_id");
@@ -671,6 +675,73 @@ namespace Hally.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_tasks_family_id_state_due_at");
 
                     b.ToTable("tasks", (string)null);
+                });
+
+            modelBuilder.Entity("Hally.Domain.Sharing.ShareLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by_user_id");
+
+                    b.Property<DateOnly?>("Day")
+                        .HasColumnType("date")
+                        .HasColumnName("day");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("kind");
+
+                    b.Property<DateTimeOffset?>("LastOpenedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_opened_at");
+
+                    b.Property<int>("OpenCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("open_count");
+
+                    b.Property<DateTimeOffset?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("revoked_at");
+
+                    b.Property<Guid?>("TaskId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("task_id");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("token_hash");
+
+                    b.HasKey("Id")
+                        .HasName("pk_share_links");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique()
+                        .HasDatabaseName("ix_share_links_token_hash");
+
+                    b.HasIndex("FamilyId", "ExpiresAt")
+                        .HasDatabaseName("ix_share_links_family_id_expires_at");
+
+                    b.ToTable("share_links", (string)null);
                 });
 
             modelBuilder.Entity("Hally.Domain.Users.ExternalLogin", b =>
@@ -999,6 +1070,16 @@ namespace Hally.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_tasks_families_family_id");
+                });
+
+            modelBuilder.Entity("Hally.Domain.Sharing.ShareLink", b =>
+                {
+                    b.HasOne("Hally.Domain.Families.Family", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_share_links_families_family_id");
                 });
 
             modelBuilder.Entity("Hally.Domain.Users.ExternalLogin", b =>

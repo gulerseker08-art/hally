@@ -66,11 +66,27 @@ public class FamilyTask : Entity
         CompletedByUserId ??= userId;
     }
 
+    /// <summary>Marked done from a helper share link: there is no Hally user behind it.</summary>
+    public void CompleteByHelper(DateTimeOffset now)
+    {
+        if (State != TaskState.Open)
+        {
+            return;
+        }
+
+        State = TaskState.Done;
+        CompletedAt = now;
+        CompletedByHelper = true;
+    }
+
+    public bool CompletedByHelper { get; private set; }
+
     public void Reopen()
     {
         State = TaskState.Open;
         CompletedAt = null;
         CompletedByUserId = null;
+        CompletedByHelper = false;
     }
 
     public void Cancel() => State = TaskState.Cancelled;
