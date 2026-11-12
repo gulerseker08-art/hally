@@ -7,6 +7,8 @@ import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../notifications/reminder_sheet.dart';
+import '../sharing/helper_share_sheet.dart';
+import '../sharing/sharing_repository.dart';
 import 'planning_repository.dart';
 
 /// All family tasks: open (by due date) and done, with quick add.
@@ -72,12 +74,24 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                                 controlAffinity: ListTileControlAffinity.leading,
                                 secondary: t.state == 'Done'
                                     ? null
-                                    : IconButton(
-                                        key: Key('task.${t.id}.remind'),
-                                        icon: const Icon(Icons.notification_add_outlined),
-                                        tooltip: l10n.reminderTitle,
-                                        onPressed: () => showReminderSheet(context, ref,
-                                            familyId: familyId, target: 'Task', targetId: t.id, title: t.title, at: t.dueAt, allDay: t.allDay),
+                                    : Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            key: Key('task.${t.id}.share'),
+                                            icon: const Icon(Icons.volunteer_activism_outlined),
+                                            tooltip: l10n.helperShareTitle,
+                                            onPressed: () => showHelperShareSheet(context, ref,
+                                                subject: t.title, create: () => ref.read(sharingRepositoryProvider).shareTask(familyId, t.id)),
+                                          ),
+                                          IconButton(
+                                            key: Key('task.${t.id}.remind'),
+                                            icon: const Icon(Icons.notification_add_outlined),
+                                            tooltip: l10n.reminderTitle,
+                                            onPressed: () => showReminderSheet(context, ref,
+                                                familyId: familyId, target: 'Task', targetId: t.id, title: t.title, at: t.dueAt, allDay: t.allDay),
+                                          ),
+                                        ],
                                       ),
                                 activeColor: HallyColors.mint,
                                 title: Text(t.title),

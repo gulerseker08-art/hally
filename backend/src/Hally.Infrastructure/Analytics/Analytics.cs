@@ -31,6 +31,9 @@ public static class AnalyticsEvents
     public const string ReminderCreated = "reminder_created";
     public const string ReminderSent = "reminder_sent";
     public const string EveningPrepSent = "evening_prep_sent";
+    public const string HelperLinkCreated = "helper_link_created";
+    public const string HelperLinkOpened = "helper_link_opened";
+    public const string HelperTaskCompleted = "helper_task_completed";
 }
 
 public class AnalyticsEvent

@@ -92,6 +92,29 @@ class FamilyScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: HallySpace.md),
+              Card(
+                child: Column(
+                  children: [
+                    ListTile(
+                      key: const Key('family.weeklyCard'),
+                      leading: const HallyIconBadge(icon: Icons.auto_awesome_rounded, color: HallyColors.rose),
+                      title: Text(l10n.familyWeeklyCard),
+                      subtitle: Text(l10n.familyWeeklyCardBody),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => context.push('/weekly-card'),
+                    ),
+                    ListTile(
+                      key: const Key('family.helperLinks'),
+                      leading: const HallyIconBadge(icon: Icons.volunteer_activism_rounded, color: HallyColors.mint),
+                      title: Text(l10n.familyHelperLinks),
+                      subtitle: Text(l10n.familyHelperLinksBody),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => context.push('/share-links'),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

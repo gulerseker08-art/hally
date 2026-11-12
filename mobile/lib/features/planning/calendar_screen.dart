@@ -7,6 +7,8 @@ import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../notifications/reminder_sheet.dart';
+import '../sharing/helper_share_sheet.dart';
+import '../sharing/sharing_repository.dart';
 import 'planning_repository.dart';
 
 /// Week strip + the selected day's events. Events come from approved proposals or manual entry.
@@ -40,6 +42,16 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           IconButton(icon: const Icon(Icons.chevron_left), onPressed: () => setState(() => _selected = _selected.subtract(const Duration(days: 7)))),
           TextButton(onPressed: () => setState(() => _selected = DateUtils.dateOnly(DateTime.now())), child: Text(l10n.calendarToday)),
           IconButton(icon: const Icon(Icons.chevron_right), onPressed: () => setState(() => _selected = _selected.add(const Duration(days: 7)))),
+          IconButton(
+            key: const Key('calendar.shareDay'),
+            tooltip: l10n.calendarShareDay,
+            icon: const Icon(Icons.volunteer_activism_outlined),
+            onPressed: () {
+              final day = _selected;
+              showHelperShareSheet(context, ref,
+                  subject: DateFormat.MMMMEEEEd(locale).format(day), create: () => ref.read(sharingRepositoryProvider).shareDay(familyId, day));
+            },
+          ),
         ],
       ),
       floatingActionButton: Padding(

@@ -3,6 +3,7 @@ using Hally.Domain.Common;
 using Hally.Domain.Families;
 using Hally.Domain.Notifications;
 using Hally.Domain.Planning;
+using Hally.Domain.Sharing;
 using Hally.Domain.Users;
 using Hally.Infrastructure.Analytics;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ public class HallyDbContext(DbContextOptions<HallyDbContext> options) : DbContex
     public DbSet<Reminder> Reminders => Set<Reminder>();
     public DbSet<Device> Devices => Set<Device>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<ShareLink> ShareLinks => Set<ShareLink>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -186,6 +188,15 @@ public class HallyDbContext(DbContextOptions<HallyDbContext> options) : DbContex
             e.HasIndex(x => x.DedupKey).IsUnique();
             e.HasIndex(x => new { x.UserId, x.CreatedAt });
             e.HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne<Family>().WithMany().HasForeignKey(x => x.FamilyId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        b.Entity<ShareLink>(e =>
+        {
+            e.Property(x => x.Kind).HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.TokenHash).HasMaxLength(64).IsRequired();
+            e.HasIndex(x => x.TokenHash).IsUnique();
+            e.HasIndex(x => new { x.FamilyId, x.ExpiresAt });
             e.HasOne<Family>().WithMany().HasForeignKey(x => x.FamilyId).OnDelete(DeleteBehavior.Cascade);
         });
 

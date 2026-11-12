@@ -15,6 +15,7 @@ import 'features/family/join_family_screen.dart';
 import 'features/home/home_shell.dart';
 import 'features/home/today_screen.dart';
 import 'features/notifications/notifications_screen.dart';
+import 'features/sharing/weekly_card_screen.dart';
 import 'features/planning/calendar_screen.dart';
 import 'features/planning/tasks_screen.dart';
 import 'features/onboarding/trust_screen.dart';
@@ -79,6 +80,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/capture/text', builder: (_, __) => const CaptureTextScreen()),
       GoRoute(path: '/capture/review', builder: (_, __) => const ReviewScreen()),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
+      GoRoute(path: '/weekly-card', builder: (_, __) => const WeeklyCardScreen()),
+      GoRoute(path: '/share-links', builder: (_, __) => const ShareLinksScreen()),
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => HomeShell(shell: shell),
         branches: [
