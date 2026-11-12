@@ -191,5 +191,46 @@
       }
     }
   },
-  "familyInviteBody": "Yükü paylaşmak için eşini ya da partnerini ekle."
+  "familyInviteBody": "Yükü paylaşmak için eşini ya da partnerini ekle.",
+  "demoTitle": "Hadi bir deneyelim",
+  "demoBody": "Bu örnek okul duyurusunu tara, Hally görevleri çıkarsın. Hesap gerekmez.",
+  "demoSampleLabel": "Örnek duyuru",
+  "demoScan": "Duyuruyu tara",
+  "demoSkip": "Atla",
+  "demoFoundTitle": "{count} şey buldum",
+  "@demoFoundTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "demoFoundBody": "Gerçek hayatta bunları onaylayınca ailenin listesine eklenir.",
+  "demoSave": "Bunları aileme kaydet",
+  "tabCalendar": "Takvim",
+  "tabTasks": "Görevler",
+  "calendarEmpty": "Bu güne planlanmış bir şey yok",
+  "calendarEmptyBody": "Okul duyurularını yakala, etkinlikler buraya gelsin.",
+  "calendarAdd": "Etkinlik ekle",
+  "calendarToday": "Bugün",
+  "eventTitle": "Başlık",
+  "eventDate": "Tarih",
+  "eventTime": "Saat",
+  "eventSave": "Kaydet",
+  "eventConflict": "Bu saatte başka bir etkinlik var: {title}",
+  "@eventConflict": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksOpen": "Açık",
+  "tasksDone": "Tamamlanan",
+  "tasksEmpty": "Açık görev yok",
+  "tasksEmptyBody": "Bir duyurunun fotoğrafını çek, görevleri ben çıkarayım.",
+  "taskAdd": "Görev ekle",
+  "taskReopen": "Geri al",
+  "taskNoDate": "Tarihsiz",
+  "shareReceived": "Paylaşılan içerik okunuyor…"
 }

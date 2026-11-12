@@ -21,6 +21,7 @@ dependencies:
   sign_in_with_apple: ^6.1.4
   uuid: ^4.5.1
   image_picker: ^1.1.2
+  receive_sharing_intent: ^1.8.1
 
 dev_dependencies:
   flutter_test:

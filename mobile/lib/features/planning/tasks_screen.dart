@@ -1,0 +1,153 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+import '../../core/auth/auth_repository.dart';
+import '../../core/design/tokens.dart';
+import '../../core/design/widgets.dart';
+import '../../l10n/gen/app_localizations.dart';
+import 'planning_repository.dart';
+
+/// All family tasks: open (by due date) and done, with quick add.
+class TasksScreen extends ConsumerStatefulWidget {
+  const TasksScreen({super.key});
+
+  @override
+  ConsumerState<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends ConsumerState<TasksScreen> {
+  String _state = 'Open';
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    final familyId = ref.watch(meProvider).valueOrNull?.primaryFamily?.id;
+    if (familyId == null) return const Scaffold(body: HallyLoading());
+    final args = (familyId, _state);
+    final tasks = ref.watch(tasksProvider(args));
+
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.tabTasks)),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 88),
+        child: FloatingActionButton.extended(
+          key: const Key('tasks.add'),
+          onPressed: () => _addTask(familyId),
+          icon: const Icon(Icons.add),
+          label: Text(l10n.taskAdd),
+        ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: HallySpace.md),
+            child: SegmentedButton<String>(
+              segments: [
+                ButtonSegment(value: 'Open', label: Text(l10n.tasksOpen)),
+                ButtonSegment(value: 'Done', label: Text(l10n.tasksDone)),
+              ],
+              selected: {_state},
+              onSelectionChanged: (s) => setState(() => _state = s.first),
+            ),
+          ),
+          Expanded(
+            child: tasks.when(
+              loading: () => const HallyLoading(),
+              error: (_, __) => HallyErrorState(onRetry: () => ref.invalidate(tasksProvider(args))),
+              data: (items) => items.isEmpty
+                  ? HallyEmptyState(icon: Icons.task_alt_rounded, title: l10n.tasksEmpty, body: l10n.tasksEmptyBody)
+                  : RefreshIndicator(
+                      onRefresh: () => ref.refresh(tasksProvider(args).future),
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(HallySpace.md, HallySpace.sm, HallySpace.md, 120),
+                        children: [
+                          for (final t in items)
+                            Card(
+                              child: CheckboxListTile(
+                                key: Key('task.${t.id}'),
+                                value: t.state == 'Done',
+                                activeColor: HallyColors.mint,
+                                title: Text(t.title),
+                                subtitle: Text(t.dueAt == null
+                                    ? l10n.taskNoDate
+                                    : t.allDay
+                                        ? DateFormat.MMMEd(locale).format(t.dueAt!)
+                                        : DateFormat.MMMEd(locale).add_Hm().format(t.dueAt!)),
+                                onChanged: (_) async {
+                                  final repo = ref.read(planningRepositoryProvider);
+                                  if (t.state == 'Done') {
+                                    await repo.reopenTask(familyId, t.id);
+                                  } else {
+                                    await repo.completeTask(familyId, t.id);
+                                  }
+                                  ref.invalidate(tasksProvider((familyId, 'Open')));
+                                  ref.invalidate(tasksProvider((familyId, 'Done')));
+                                  ref.invalidate(todayProvider(familyId));
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _addTask(String familyId) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final controller = TextEditingController();
+    DateTime? due;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (c) => StatefulBuilder(
+        builder: (c, setDialogState) => AlertDialog(
+          title: Text(l10n.taskAdd),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(key: const Key('task.title'), controller: controller, autofocus: true, maxLength: 200),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.event),
+                title: Text(due == null ? l10n.taskNoDate : DateFormat.yMMMEd(Localizations.localeOf(c).toLanguageTag()).format(due!)),
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: c,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now().subtract(const Duration(days: 1)),
+                    lastDate: DateTime.now().add(const Duration(days: 730)),
+                  );
+                  if (picked != null) setDialogState(() => due = picked);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(c, false), child: Text(MaterialLocalizations.of(c).cancelButtonLabel)),
+            FilledButton(
+              style: FilledButton.styleFrom(minimumSize: const Size(64, 40)),
+              onPressed: () => Navigator.pop(c, controller.text.trim().isNotEmpty),
+              child: Text(l10n.eventSave),
+            ),
+          ],
+        ),
+      ),
+    );
+    final title = controller.text.trim();
+    controller.dispose();
+    if (ok != true) return;
+    try {
+      await ref.read(planningRepositoryProvider).createTask(familyId, title: title, dueDate: due);
+      ref.invalidate(tasksProvider((familyId, 'Open')));
+      ref.invalidate(todayProvider(familyId));
+    } catch (_) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
+    }
+  }
+}

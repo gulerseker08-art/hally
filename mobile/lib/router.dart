@@ -7,16 +7,19 @@ import 'core/design/widgets.dart';
 import 'features/auth/sign_in_screen.dart';
 import 'features/capture/capture_text_screen.dart';
 import 'features/capture/review_screen.dart';
+import 'features/demo/demo_scan_screen.dart';
 import 'features/family/family_screen.dart';
 import 'features/family/family_setup_screen.dart';
 import 'features/family/invite_partner_screen.dart';
 import 'features/family/join_family_screen.dart';
 import 'features/home/home_shell.dart';
 import 'features/home/today_screen.dart';
+import 'features/planning/calendar_screen.dart';
+import 'features/planning/tasks_screen.dart';
 import 'features/onboarding/trust_screen.dart';
 import 'features/onboarding/welcome_screen.dart';
 
-const _publicRoutes = {'/welcome', '/trust', '/sign-in', '/join'};
+const _publicRoutes = {'/welcome', '/trust', '/demo', '/sign-in', '/join'};
 
 /// Pure redirect rules so they can be unit tested.
 String? resolveRedirect({
@@ -66,6 +69,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/', builder: (_, __) => const Scaffold(body: HallyLoading())),
       GoRoute(path: '/welcome', builder: (_, __) => const WelcomeScreen()),
       GoRoute(path: '/trust', builder: (_, __) => const TrustScreen()),
+      GoRoute(path: '/demo', builder: (_, __) => const DemoScanScreen()),
       GoRoute(path: '/sign-in', builder: (_, __) => const SignInScreen()),
       GoRoute(path: '/join', builder: (_, __) => const EnterInviteScreen()),
       GoRoute(path: '/i/:token', builder: (_, s) => JoinFamilyScreen(token: s.pathParameters['token']!)),
@@ -77,6 +81,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, __, shell) => HomeShell(shell: shell),
         branches: [
           StatefulShellBranch(routes: [GoRoute(path: '/today', builder: (_, __) => const TodayScreen())]),
+          StatefulShellBranch(routes: [GoRoute(path: '/calendar', builder: (_, __) => const CalendarScreen())]),
+          StatefulShellBranch(routes: [GoRoute(path: '/tasks', builder: (_, __) => const TasksScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/family', builder: (_, __) => const FamilyScreen())]),
         ],
       ),

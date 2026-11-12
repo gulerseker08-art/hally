@@ -19,6 +19,7 @@ public static class AnalyticsEvents
     public const string InvitationCreated = "invitation_created";
     public const string InvitationAccepted = "invitation_accepted";
     public const string ChildAdded = "child_added";
+    public const string OnboardingDemoScanned = "onboarding_demo_scanned";
     public const string CaptureStarted = "capture_started";
     public const string DocumentScanned = "document_scanned";
     public const string ProposalShown = "proposal_shown";
