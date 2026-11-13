@@ -44,10 +44,15 @@ dotnet ef migrations add <Name> -p backend/src/Hally.Infrastructure -s backend/s
 
 ```bash
 cd mobile
-flutter create --org app.hally --project-name hally --platforms=android,ios .   # first time only: generates native folders
 flutter pub get
 flutter run --dart-define=HALLY_API_URL=http://10.0.2.2:8080   # Android emulator → host API
+# Real phone on the same Wi-Fi: use the PC's LAN IP, e.g. --dart-define=HALLY_API_URL=http://192.168.1.20:8080
 ```
+
+Debug builds allow plain HTTP to a local API. Release builds require HTTPS. Without an AI key, the demo scan and photo capture answer
+"AI unavailable"; everything else works, and the assistant answers basic day questions on its own. Sign in with the developer
+sign-in (any email and name). To try Family Plus locally, use the 7-day trial, or set `BILLING_SANDBOX=true` and register a
+`sandbox:hally_plus_monthly:test` purchase through Swagger.
 
 `--dart-define` keys: `HALLY_API_URL`, `HALLY_APP_NAME`, `HALLY_GOOGLE_SERVER_CLIENT_ID`, `HALLY_DEV_SIGN_IN` (set `false` for store builds).
 
