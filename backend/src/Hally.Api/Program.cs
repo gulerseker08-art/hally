@@ -73,6 +73,9 @@ builder.Services.AddHttpClient<GooglePlayVerifier>();
 builder.Services.AddTransient<IStoreVerifier>(sp => sp.GetRequiredService<AppStoreVerifier>());
 builder.Services.AddTransient<IStoreVerifier>(sp => sp.GetRequiredService<GooglePlayVerifier>());
 
+builder.Services.Configure<Hally.Api.Features.Privacy.PrivacyOptions>(builder.Configuration.GetSection(Hally.Api.Features.Privacy.PrivacyOptions.Section));
+builder.Services.AddScoped<Hally.Api.Features.Privacy.AccountService>();
+
 builder.Services.AddHallyJobs(builder.Configuration, connectionString);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>

@@ -63,6 +63,25 @@ public class Family : Entity
         return member;
     }
 
+    /// <summary>Removes an adult (leaving or deleting their account). If the owner leaves, the longest-standing
+    /// remaining adult becomes owner. Returns false when the user was not a member.</summary>
+    public bool RemoveMember(Guid userId)
+    {
+        var member = _members.FirstOrDefault(m => m.UserId == userId);
+        if (member is null)
+        {
+            return false;
+        }
+
+        _members.Remove(member);
+        if (member.Role == FamilyRole.Owner && _members.Count > 0 && _members.All(m => m.Role != FamilyRole.Owner))
+        {
+            _members.OrderBy(m => m.CreatedAt).First().Promote();
+        }
+
+        return true;
+    }
+
     public Child AddChild(string firstName, int? birthYear)
     {
         var child = new Child(Id, firstName, birthYear);
@@ -91,6 +110,8 @@ public class FamilyMember : Entity
     public Guid FamilyId { get; private set; }
     public Guid UserId { get; private set; }
     public FamilyRole Role { get; private set; }
+
+    internal void Promote() => Role = FamilyRole.Owner;
 }
 
 /// <summary>A child profile. Only a first name is kept (no surname) to minimise PII.</summary>

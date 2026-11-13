@@ -116,6 +116,13 @@ The 7-day trial needs no store and no card, once per family and once per adult. 
 (App Store Server API, Google Play Developer API) and never taken from the app's word; renewals and cancellations arrive through
 store notifications plus an hourly re-check. Prices come from the stores. See [docs/mobile/billing.md](docs/mobile/billing.md).
 
+## Privacy & account (Sprint 4)
+
+- `GET /api/v1/me/export` returns everything stored about the caller and their families as one JSON file. Photos are not included: originals are encrypted and deleted after `Storage:RetentionDays`.
+- Deleting an account (`DELETE /api/v1/me?confirm=true`) removes the profile, sign-ins, sessions, devices, inbox and own chats. A family where the user is the only adult is deleted with everything in it, including stored photos. In a shared family the plan stays for the other adults. Ownership moves to the longest-standing adult, and the user's assignments, personal reminders, pending invitations and helper links are cleared. Analytics events lose the user id.
+- A store subscription is not cancelled by account deletion, because the store owns billing. The app says so before deleting.
+- The privacy screen says "never used to train AI models" only when `Privacy:AiProviderNoTraining=true`. Set it only if the AI provider's terms guarantee it. Otherwise the screen gives the accurate statement.
+
 ## API
 
 | Method | Path | Notes |
@@ -150,6 +157,10 @@ store notifications plus an hourly re-check. Prices come from the stores. See [d
 | GET | `/api/v1/families/{id}/entitlements` | Plan, state, limits and this week's usage |
 | POST | `/api/v1/families/{id}/subscription/trial` · `/purchases` | Start the trial; register or restore a store purchase (verified with the store) |
 | POST | `/api/v1/billing/notifications/apple` · `/google?token=` | Store server notifications (only trigger a re-check) |
+| GET | `/api/v1/me/export` | Data export (JSON file) |
+| DELETE | `/api/v1/me?confirm=true` | Delete the account |
+| POST | `/api/v1/families/{id}/leave` | Leave a family (the last adult leaving deletes it) |
+| GET | `/api/v1/privacy` | Facts for the privacy screen (retention, AI training statement) |
 | POST | `/api/v1/analytics/events` | Allow-listed app events (paywall_viewed etc.), scalar properties only |
 
 All state-changing POSTs except auth require an `Idempotency-Key` header. Errors are RFC 9457 problem details with a `code` extension.

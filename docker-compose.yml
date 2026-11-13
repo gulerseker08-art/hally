@@ -33,6 +33,10 @@ services:
       Push__FcmProjectId: ${FCM_PROJECT_ID:-}
       Push__FcmServiceAccountJson: ${FCM_SERVICE_ACCOUNT_JSON:-}
       Billing__SandboxPurchases: ${BILLING_SANDBOX:-false}
+      Privacy__AiProviderNoTraining: ${PRIVACY_AI_NO_TRAINING:-false}
+      Privacy__AiProviderName: ${PRIVACY_AI_PROVIDER_NAME:-}
+      Privacy__ContactEmail: ${PRIVACY_CONTACT_EMAIL:-}
+      Privacy__PolicyUrl: ${PRIVACY_POLICY_URL:-}
       Billing__Apple__BundleId: ${APPLE_BUNDLE_ID:-}
       Billing__Apple__IssuerId: ${APPLE_IAP_ISSUER_ID:-}
       Billing__Apple__KeyId: ${APPLE_IAP_KEY_ID:-}

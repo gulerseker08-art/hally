@@ -6,6 +6,7 @@ import 'core/auth/auth_repository.dart';
 import 'core/design/widgets.dart';
 import 'features/auth/sign_in_screen.dart';
 import 'features/billing/paywall_screen.dart';
+import 'features/privacy/privacy_screen.dart';
 import 'features/capture/capture_text_screen.dart';
 import 'features/capture/review_screen.dart';
 import 'features/demo/demo_scan_screen.dart';
@@ -93,6 +94,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(path: '/plan', builder: (_, __) => const PlanScreen()),
+      GoRoute(path: '/privacy', builder: (_, __) => const PrivacyScreen()),
       StatefulShellRoute.indexedStack(
         builder: (_, __, shell) => HomeShell(shell: shell),
         branches: [
