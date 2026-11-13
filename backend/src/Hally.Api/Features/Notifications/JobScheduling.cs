@@ -12,6 +12,7 @@ public static class JobScheduling
         services.AddScoped<ReminderDispatcher>();
         services.AddScoped<EveningPrepJob>();
         services.AddScoped<RetentionJob>();
+        services.AddScoped<Billing.SubscriptionRefreshJob>();
         if (!config.GetValue("Jobs:Enabled", true))
         {
             return services;
@@ -37,5 +38,6 @@ public static class JobScheduling
         jobs.AddOrUpdate<ReminderDispatcher>("reminders", j => j.RunAsync(CancellationToken.None), Cron.Minutely());
         jobs.AddOrUpdate<EveningPrepJob>("evening-prep", j => j.RunAsync(CancellationToken.None), "*/15 * * * *");
         jobs.AddOrUpdate<RetentionJob>("retention", j => j.RunAsync(CancellationToken.None), "30 3 * * *");
+        jobs.AddOrUpdate<Billing.SubscriptionRefreshJob>("subscription-refresh", j => j.RunAsync(CancellationToken.None), Cron.Hourly());
     }
 }

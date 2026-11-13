@@ -37,13 +37,14 @@ public class CreateShareLinkRequestValidator : AbstractValidator<CreateShareLink
 [ApiController]
 [Authorize(Policy = Policies.FamilyMember)]
 [Route("api/v1/families/{familyId:guid}/share-links")]
-public class ShareLinksController(HallyDbContext db, IAnalytics analytics, IOptions<AppOptions> app, TimeProvider clock) : ControllerBase
+public class ShareLinksController(HallyDbContext db, IAnalytics analytics, IOptions<AppOptions> app, Billing.EntitlementService entitlements, TimeProvider clock) : ControllerBase
 {
     [HttpPost]
     [Idempotent]
     [ProducesResponseType<ShareLinkCreatedDto>(201)]
     public async Task<IActionResult> Create(Guid familyId, CreateShareLinkRequest request, CancellationToken ct)
     {
+        await entitlements.EnsureCanShareAsync(familyId, ct);
         var userId = User.UserId();
         var now = clock.GetUtcNow();
         var token = Crypto.NewToken();

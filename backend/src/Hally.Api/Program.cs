@@ -5,6 +5,7 @@ using FluentValidation.AspNetCore;
 using Hally.Api.Auth;
 using Hally.Api.Common;
 using Hally.Api.Features.Assistant;
+using Hally.Api.Features.Billing;
 using Hally.Api.Features.Captures;
 using Hally.Api.Features.Demo;
 using Hally.Api.Features.Notifications;
@@ -61,6 +62,16 @@ else
 {
     builder.Services.AddHttpClient<IPushSender, FcmPushSender>();
 }
+
+builder.Services.Configure<BillingOptions>(builder.Configuration.GetSection(BillingOptions.Section));
+builder.Services.AddScoped<EntitlementService>();
+builder.Services.AddScoped<SubscriptionUpdater>();
+builder.Services.AddScoped<StoreVerification>();
+builder.Services.AddSingleton<SandboxStoreVerifier>();
+builder.Services.AddHttpClient<AppStoreVerifier>();
+builder.Services.AddHttpClient<GooglePlayVerifier>();
+builder.Services.AddTransient<IStoreVerifier>(sp => sp.GetRequiredService<AppStoreVerifier>());
+builder.Services.AddTransient<IStoreVerifier>(sp => sp.GetRequiredService<GooglePlayVerifier>());
 
 builder.Services.AddHallyJobs(builder.Configuration, connectionString);
 
