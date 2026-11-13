@@ -23,9 +23,8 @@ public class ClientEventsController(HallyDbContext db, IAnalytics analytics) : C
         [AnalyticsEvents.PaywallViewed] = ["trigger"],
         ["paywall_dismissed"] = ["trigger"],
         ["purchase_started"] = ["product", "store"],
-        ["onboarding_started"] = [],
         ["onboarding_completed"] = [],
-        ["summary_card_shared"] = ["include_child_names"],
+        ["summary_card_shared"] = ["offset", "children"],
         ["invitation_shared"] = ["channel"],
     };
 

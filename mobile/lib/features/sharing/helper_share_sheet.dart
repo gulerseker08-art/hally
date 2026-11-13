@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/api/api_client.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
@@ -39,6 +41,15 @@ class _HelperShareSheetState extends State<_HelperShareSheet> {
       final link = await widget.create();
       if (mounted) setState(() => _link = link);
       return link;
+    } on ApiException catch (e) {
+      if (mounted && e.needsPlus) {
+        final router = GoRouter.of(context);
+        Navigator.of(context).pop();
+        router.push('/paywall?trigger=${e.trigger ?? 'share_link_limit'}');
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).errorGeneric)));
+      }
+      return null;
     } catch (_) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).errorGeneric)));
       return null;

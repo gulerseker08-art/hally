@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/api/api_client.dart';
 import '../../core/design/tokens.dart';
 import '../../l10n/gen/app_localizations.dart';
 import 'notifications_repository.dart';
@@ -19,6 +21,7 @@ Future<void> showReminderSheet(
 }) async {
   final l10n = AppLocalizations.of(context);
   final messenger = ScaffoldMessenger.of(context);
+  final router = GoRouter.maybeOf(context);
   final picked = await showModalBottomSheet<(DateTime, bool)>(
     context: context,
     showDragHandle: true,
@@ -29,6 +32,13 @@ Future<void> showReminderSheet(
   try {
     await ref.read(notificationsRepositoryProvider).createReminder(familyId, target: target, targetId: targetId, fireAt: picked.$1, forEveryone: picked.$2);
     messenger.showSnackBar(SnackBar(content: Text(l10n.reminderSet)));
+  } on ApiException catch (e) {
+    if (e.needsPlus && router != null) {
+      // More than one reminder per item is a Family Plus feature.
+      router.push('/paywall?trigger=${e.trigger ?? 'advanced_reminder'}');
+    } else {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
+    }
   } catch (_) {
     messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
   }

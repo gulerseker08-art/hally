@@ -105,6 +105,17 @@ Only the token's hash is stored. The page shows the sharer's first name, never t
 
 The weekly card is drawn on the server with SkiaSharp and bundled OFL fonts (`backend/src/Hally.Api/Assets/Fonts`). Child names appear only if the user turns them on.
 
+## Plans & billing (Sprint 4)
+
+Free and Family Plus are set in `Billing:Free` / `Billing:Plus` (adults, scans per week or month, open helper links, reminders per item),
+so packaging can change without a release. The Free plan allows 2 adults, 3 photo or document scans a week (typed text is not a scan),
+3 open helper links and 1 reminder per item. Family Plus allows 6 adults, 100 scans a month, unlimited links and 5 reminders per item.
+Going over a limit answers **402** with `code`, `trigger` and `limit`, and the app opens the paywall with that trigger. Viewing existing data is never limited.
+
+The 7-day trial needs no store and no card, once per family and once per adult. Store purchases are verified on the server
+(App Store Server API, Google Play Developer API) and never taken from the app's word; renewals and cancellations arrive through
+store notifications plus an hourly re-check. Prices come from the stores. See [docs/mobile/billing.md](docs/mobile/billing.md).
+
 ## API
 
 | Method | Path | Notes |
@@ -135,6 +146,11 @@ The weekly card is drawn on the server with SkiaSharp and bundled OFL fonts (`ba
 | POST | `/api/v1/families/{id}/assistant/messages` | Chat with Hally (read tools + suggestions), rate limited per user (`Assistant:MessagesPerHour`) |
 | GET | `/api/v1/families/{id}/assistant/conversations` · `/{cid}/messages` | The caller's own chat history |
 | GET | `/api/v1/families/{id}/weekly-summary` · `/card.png` | Week stats and a 1080×1350 shareable card (child names only with `includeChildNames=true`) |
+| GET | `/api/v1/billing/catalog` | Product ids, trial length, Free and Plus limits |
+| GET | `/api/v1/families/{id}/entitlements` | Plan, state, limits and this week's usage |
+| POST | `/api/v1/families/{id}/subscription/trial` · `/purchases` | Start the trial; register or restore a store purchase (verified with the store) |
+| POST | `/api/v1/billing/notifications/apple` · `/google?token=` | Store server notifications (only trigger a re-check) |
+| POST | `/api/v1/analytics/events` | Allow-listed app events (paywall_viewed etc.), scalar properties only |
 
 All state-changing POSTs except auth require an `Idempotency-Key` header. Errors are RFC 9457 problem details with a `code` extension.
 
@@ -142,5 +158,5 @@ All state-changing POSTs except auth require an `Idempotency-Key` header. Errors
 
 - **Sprint 1 – Foundation** (done): solution, auth, families, invitations, design tokens, tr/en, onboarding shell, analytics boundary, CI.
 - **Sprint 2 – Capture & AI proposals** (done): demo scan, capture sheet, share extension, extraction, approval sheet, tasks & calendar.
-- **Sprint 3 – Assistant & daily loop**: chat, Today, reminders, push, helper share links, weekly card.
+- **Sprint 3 – Assistant & daily loop** (done): chat, Today, reminders, push, helper share links, weekly card.
 - **Sprint 4 – Monetization & beta**: plans, paywall, privacy & account deletion, beta pipeline.
