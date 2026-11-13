@@ -423,5 +423,61 @@
       }
     }
   },
-  "joinFamilyFull": "Bu aile ücretsiz planın yetişkin sınırına ulaştı. Seni davet eden kişi Family Plus'a geçince katılabilirsin."
+  "joinFamilyFull": "Bu aile ücretsiz planın yetişkin sınırına ulaştı. Seni davet eden kişi Family Plus'a geçince katılabilirsin.",
+  "cancel": "Vazgeç",
+  "privacyTitle": "Gizlilik ve hesap",
+  "familyPrivacyBody": "Verilerin, indirme ve hesap silme",
+  "privacyPointApproval": "Hally senin onayın olmadan takvime ya da görevlere hiçbir şey eklemez.",
+  "privacyPointAiNoTraining": "Ailenin verileri yapay zekâ modellerini eğitmek için asla kullanılmaz.",
+  "privacyPointAiProcessing": "Fotoğraf ve mesajlar yalnızca isteğini yanıtlamak için yapay zekâ servisine gönderilir. Hally verilerini model eğitmek için kullanmaz.",
+  "privacyPointPhotos": "Fotoğraflar şifreli saklanır ve {days} gün sonra silinir. Onlardan çıkarılan görev ve etkinlikler kalır.",
+  "@privacyPointPhotos": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "privacyPointChildren": "Çocuklar için yalnızca ad ve isteğe bağlı doğum yılı tutulur. Çocuk fotoğrafı gerekmez.",
+  "privacyPointLinks": "Yardımcı linkleri sadece paylaştığın işi gösterir, kısa sürede kendiliğinden kapanır ve istediğinde kapatılabilir.",
+  "privacyPointAnalytics": "Kullanım ölçümlerinde isim, e-posta ya da yazdığın metinler yer almaz.",
+  "privacyPolicy": "Gizlilik politikasının tamamı",
+  "privacyYourData": "Verilerin",
+  "privacyExport": "Verilerimi indir",
+  "privacyExportBody": "Profilin, ailen ve planların tek bir JSON dosyasında",
+  "privacyLeave": "{family} ailesinden ayrıl",
+  "@privacyLeave": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyLeaveTitle": "Aileden ayrılmak istiyor musun?",
+  "privacyLeaveBody": "Ailenin planlarına erişimin kalkar. Sana atanmış açık görevler atamasız kalır, diğer yetişkinler planı kullanmaya devam eder.",
+  "privacyLeaveAloneBody": "Bu ailede tek yetişkin sensin. Ayrılırsan aile ve içindeki her şey kalıcı olarak silinir.",
+  "privacyLeaveAction": "Ayrıl",
+  "privacyDelete": "Hesabımı sil",
+  "privacyDeleteHint": "Kalıcıdır, geri alınamaz",
+  "privacyDeleteTitle": "Hesabını silmek istiyor musun?",
+  "privacyDeleteBody": "Profilin, oturumların, bildirimlerin ve sohbetlerin silinir. Tek yetişkin olduğun aileler tüm içerikleriyle silinir; ortak ailelerde plan diğer yetişkinler için kalır. Mağazadan aldığın bir abonelik varsa onu App Store ya da Google Play üzerinden ayrıca iptal etmelisin.",
+  "privacyDeleteContinue": "Devam et",
+  "privacyDeleteWord": "SİL",
+  "privacyDeleteTypeTitle": "Onaylamak için {word} yaz",
+  "@privacyDeleteTypeTitle": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyDeleted": "Hesabın silindi",
+  "privacyContact": "Sorular için: {email}",
+  "@privacyContact": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

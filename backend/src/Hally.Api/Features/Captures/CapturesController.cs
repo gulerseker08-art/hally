@@ -2,6 +2,7 @@ using Hally.Api.Auth;
 using Hally.Api.Common;
 using Hally.Api.Features.Proposals;
 using Hally.Domain.Capture;
+using Hally.Domain.Users;
 using Hally.Infrastructure.Ai;
 using Hally.Infrastructure.Analytics;
 using Hally.Infrastructure.Persistence;
@@ -106,7 +107,7 @@ public class CapturesController(
         var now = clock.GetUtcNow();
         var family = await db.Families.AsNoTracking().FirstAsync(f => f.Id == capture.FamilyId, ct);
         var children = await db.Children.AsNoTracking().Where(c => c.FamilyId == capture.FamilyId).ToListAsync(ct);
-        var locale = await db.Users.Where(u => u.Id == capture.CreatedByUserId).Select(u => u.Locale).FirstAsync(ct);
+        var locale = await db.Users.Where(u => u.Id == capture.CreatedByUserId).Select(u => u.Locale).FirstOrDefaultAsync(ct) ?? Locales.Turkish;
         var context = FamilyContextFactory.Create(family, children, locale, now);
 
         ExtractionResult result;
