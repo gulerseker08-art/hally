@@ -13,4 +13,10 @@ class AppConfig {
 
   /// Shows the developer sign-in (backend dev provider). Never enable for store builds.
   static const enableDevSignIn = bool.fromEnvironment('HALLY_DEV_SIGN_IN', defaultValue: true);
+
+  /// development | beta | production. Tags error reports.
+  static const environment = String.fromEnvironment('HALLY_ENV', defaultValue: 'development');
+
+  /// Sentry DSN (not a secret, but environment-specific). Empty = error reporting off.
+  static const sentryDsn = String.fromEnvironment('SENTRY_DSN');
 }

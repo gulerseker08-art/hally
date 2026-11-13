@@ -22,6 +22,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddHallyErrorMonitoring();
 builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configuration).Enrich.FromLogContext().WriteTo.Console());
 
 builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(AppOptions.Section));

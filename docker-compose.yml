@@ -34,6 +34,8 @@ services:
       Push__FcmServiceAccountJson: ${FCM_SERVICE_ACCOUNT_JSON:-}
       Billing__SandboxPurchases: ${BILLING_SANDBOX:-false}
       Privacy__AiProviderNoTraining: ${PRIVACY_AI_NO_TRAINING:-false}
+      Sentry__Dsn: ${SENTRY_DSN:-}
+      Admin__ApiKey: ${ADMIN_API_KEY:-}
       Privacy__AiProviderName: ${PRIVACY_AI_PROVIDER_NAME:-}
       Privacy__ContactEmail: ${PRIVACY_CONTACT_EMAIL:-}
       Privacy__PolicyUrl: ${PRIVACY_POLICY_URL:-}
