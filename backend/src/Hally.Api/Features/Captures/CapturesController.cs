@@ -22,6 +22,7 @@ public class CapturesController(
     IDocumentStore store,
     ExtractionService extraction,
     IAnalytics analytics,
+    Billing.EntitlementService entitlements,
     TimeProvider clock,
     ILogger<CapturesController> logger) : ControllerBase
 {
@@ -49,6 +50,7 @@ public class CapturesController(
         byte[]? bytes = null;
         if (file is not null)
         {
+            await entitlements.EnsureCanScanAsync(familyId, ct);
             if (file.Length == 0 || file.Length > MaxFileBytes || !ImageTypes.Contains(file.ContentType))
             {
                 return Problem(statusCode: 400, title: "File must be a JPEG, PNG, WebP or HEIC image up to 10 MB.", type: "https://hally.app/problems/capture.file_invalid");

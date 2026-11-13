@@ -21,6 +21,7 @@ public class InvitationsController(
     HallyDbContext db,
     IAnalytics analytics,
     IOptions<AppOptions> app,
+    Billing.EntitlementService entitlements,
     TimeProvider clock) : ControllerBase
 {
     /// <summary>Creates a 7-day invitation link for another adult, with a prefilled WhatsApp message.</summary>
@@ -30,6 +31,7 @@ public class InvitationsController(
     [ProducesResponseType<InvitationCreatedDto>(201)]
     public async Task<IActionResult> Create(Guid familyId, CancellationToken ct)
     {
+        await entitlements.EnsureCanAddAdultAsync(familyId, ct);
         var userId = User.UserId();
         var inviter = await db.Users.AsNoTracking().FirstAsync(u => u.Id == userId, ct);
         var token = Crypto.NewToken();
@@ -65,6 +67,12 @@ public class InvitationsController(
         var invitation = await Find(token, ct, track: true);
         var family = await db.Families.Include(f => f.Members).FirstAsync(f => f.Id == invitation.FamilyId, ct);
         var wasMember = family.IsMember(userId);
+        if (!wasMember && invitation.StatusAt(clock.GetUtcNow()) == InvitationStatus.Pending)
+        {
+            // Checked after the invitation itself so an expired or used link still says so.
+            await entitlements.EnsureCanAddAdultAsync(family.Id, ct);
+        }
+
         invitation.Accept(family, userId, clock.GetUtcNow());
         if (!wasMember)
         {

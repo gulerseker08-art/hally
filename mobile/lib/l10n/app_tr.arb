@@ -306,5 +306,122 @@
   "assistantSend": "Gönder",
   "assistantReview": "İncele ve onayla",
   "assistantError": "Şu an yanıt veremedim. Biraz sonra tekrar dener misin?",
-  "todayAllTasks": "Tüm görevler"
+  "todayAllTasks": "Tüm görevler",
+  "paywallTitle": "Family Plus ile aileniz rahatlasın",
+  "paywallSubtitle": "Daha çok tarama, 6 yetişkine kadar aile, sınırsız yardımcı linki ve birden fazla hatırlatma.",
+  "paywallScanLimit": "Bu haftaki {count} ücretsiz taramayı kullandın",
+  "@paywallScanLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallAdultLimit": "Ücretsiz planda aile {count} yetişkinle sınırlı",
+  "@paywallAdultLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallShareLimit": "Ücretsiz planda aynı anda {count} yardımcı linki açık olabilir",
+  "@paywallShareLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallReminderLimit": "Bir işe birden fazla hatırlatma Family Plus ile",
+  "paywallStartTrial": "{days} gün ücretsiz dene",
+  "@paywallStartTrial": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "paywallSubscribe": "Family Plus'a geç",
+  "paywallTrialNote": "Kart gerekmez. Deneme bitince otomatik ücretlendirme yapılmaz.",
+  "paywallRenewNote": "Abonelik mağaza hesabından istediğin zaman iptal edilebilir.",
+  "paywallRestore": "Satın alımları geri yükle",
+  "paywallNotNow": "Şimdi değil",
+  "paywallTrialStarted": "Family Plus denemen başladı",
+  "paywallWelcomePlus": "Family Plus'a hoş geldin",
+  "paywallStoreSoon": "Mağaza ile satın alma beta sürümünde açılacak. Şimdilik ücretsiz denemeyi kullanabilirsin.",
+  "paywallNothingToRestore": "Geri yüklenecek bir satın alım bulunamadı",
+  "paywallMonthly": "Aylık",
+  "paywallYearly": "Yıllık",
+  "paywallYearlyBadge": "2 ay bedava",
+  "paywallPriceInStore": "Fiyat mağazada gösterilir",
+  "planTitle": "Planım",
+  "planFree": "Ücretsiz",
+  "planPlus": "Family Plus",
+  "planUnlimited": "Sınırsız",
+  "planPerWeek": "Haftada {count}",
+  "@planPerWeek": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planPerMonth": "Ayda {count}",
+  "@planPerMonth": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planRowAdults": "Yetişkin",
+  "planRowScans": "Belge / fotoğraf tarama",
+  "planRowLinks": "Açık yardımcı linki",
+  "planRowReminders": "İş başına hatırlatma",
+  "planStatusTrial": "Deneme {date} tarihinde bitiyor",
+  "@planStatusTrial": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planStatusRenews": "{date} tarihinde yenilenir",
+  "@planStatusRenews": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planStatusEnds": "{date} tarihine kadar geçerli, yenilenmeyecek",
+  "@planStatusEnds": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planStatusGrace": "Ödeme yenilenemedi. Mağaza hesabındaki ödeme yöntemini kontrol et.",
+  "planStatusFree": "Ücretsiz plandasın",
+  "planUsage": "Kullanım",
+  "planThisWeek": "Bu hafta",
+  "planThisMonth": "Bu ay",
+  "planManageApple": "Aboneliği iPhone Ayarlar > Apple Kimliği > Abonelikler bölümünden yönetebilirsin.",
+  "planManageGoogle": "Aboneliği Google Play > Ödemeler ve abonelikler bölümünden yönetebilirsin.",
+  "planTrialShort": "Deneme sürüyor",
+  "planPlusShort": "Tüm özellikler açık",
+  "planFreeUsage": "Bu hafta {used}/{limit} tarama",
+  "@planFreeUsage": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "joinFamilyFull": "Bu aile ücretsiz planın yetişkin sınırına ulaştı. Seni davet eden kişi Family Plus'a geçince katılabilirsin."
 }

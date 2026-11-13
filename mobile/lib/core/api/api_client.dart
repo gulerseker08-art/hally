@@ -7,11 +7,16 @@ import '../config/app_config.dart';
 
 /// Error carrying the RFC 9457 problem `code` returned by the API.
 class ApiException implements Exception {
-  ApiException(this.status, this.code, this.message);
+  ApiException(this.status, this.code, this.message, {this.trigger});
 
   final int? status;
   final String? code;
   final String message;
+
+  /// Set on 402 answers: why the family needs Family Plus (scan_limit, adult_limit, share_link_limit, advanced_reminder).
+  final String? trigger;
+
+  bool get needsPlus => status == 402;
 
   @override
   String toString() => 'ApiException($status, $code, $message)';
@@ -72,7 +77,12 @@ class ApiClient {
     if (error is DioException) {
       final data = error.response?.data;
       if (data is Map) {
-        return ApiException(error.response?.statusCode, data['code'] as String?, (data['title'] ?? error.message ?? '').toString());
+        return ApiException(
+          error.response?.statusCode,
+          data['code'] as String?,
+          (data['title'] ?? error.message ?? '').toString(),
+          trigger: data['trigger'] as String?,
+        );
       }
       return ApiException(error.response?.statusCode, null, error.message ?? 'network error');
     }

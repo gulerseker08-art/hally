@@ -120,6 +120,91 @@ namespace Hally.Infrastructure.Persistence.Migrations
                     b.ToTable("conversations", (string)null);
                 });
 
+            modelBuilder.Entity("Hally.Domain.Billing.Subscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTimeOffset?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<DateTimeOffset?>("LastVerifiedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_verified_at");
+
+                    b.Property<string>("ProductId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("product_id");
+
+                    b.Property<Guid?>("PurchasedByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("purchased_by_user_id");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("source");
+
+                    b.Property<DateTimeOffset?>("StartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("started_at");
+
+                    b.Property<string>("StoreReference")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("store_reference");
+
+                    b.Property<DateTimeOffset?>("TrialStartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("trial_started_at");
+
+                    b.Property<Guid?>("TrialStartedByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("trial_started_by_user_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<bool>("WillRenew")
+                        .HasColumnType("boolean")
+                        .HasColumnName("will_renew");
+
+                    b.HasKey("Id")
+                        .HasName("pk_subscriptions");
+
+                    b.HasIndex("ExpiresAt")
+                        .HasDatabaseName("ix_subscriptions_expires_at");
+
+                    b.HasIndex("FamilyId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_subscriptions_family_id");
+
+                    b.HasIndex("TrialStartedByUserId")
+                        .HasDatabaseName("ix_subscriptions_trial_started_by_user_id");
+
+                    b.HasIndex("Source", "StoreReference")
+                        .HasDatabaseName("ix_subscriptions_source_store_reference");
+
+                    b.ToTable("subscriptions", (string)null);
+                });
+
             modelBuilder.Entity("Hally.Domain.Capture.Capture", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1073,6 +1158,16 @@ namespace Hally.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_conversations_users_user_id");
+                });
+
+            modelBuilder.Entity("Hally.Domain.Billing.Subscription", b =>
+                {
+                    b.HasOne("Hally.Domain.Families.Family", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_subscriptions_families_family_id");
                 });
 
             modelBuilder.Entity("Hally.Domain.Capture.Capture", b =>

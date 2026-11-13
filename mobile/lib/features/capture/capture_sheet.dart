@@ -10,6 +10,7 @@ import '../../core/auth/auth_repository.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
+import '../billing/paywall_screen.dart';
 import 'capture_models.dart';
 import 'capture_repository.dart';
 
@@ -114,9 +115,11 @@ Future<void> runCapture(BuildContext context, WidgetRef ref, Future<CaptureResul
     navigator.pop();
     ref.read(lastCaptureProvider.notifier).state = result;
     if (context.mounted) context.push('/capture/review');
-  } catch (_) {
+  } catch (e) {
     navigator.pop();
-    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.captureFailed)));
+    if (context.mounted && !openPaywallIfLimited(context, e)) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.captureFailed)));
+    }
   }
 }
 

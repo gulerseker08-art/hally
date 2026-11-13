@@ -29,7 +29,7 @@ public class CreateReminderRequestValidator : AbstractValidator<CreateReminderRe
 [ApiController]
 [Authorize(Policy = Policies.FamilyMember)]
 [Route("api/v1/families/{familyId:guid}/reminders")]
-public class RemindersController(HallyDbContext db, IAnalytics analytics, TimeProvider clock) : ControllerBase
+public class RemindersController(HallyDbContext db, IAnalytics analytics, Billing.EntitlementService entitlements, TimeProvider clock) : ControllerBase
 {
     /// <summary>Scheduled reminders, optionally for one task or event.</summary>
     [HttpGet]
@@ -64,6 +64,9 @@ public class RemindersController(HallyDbContext db, IAnalytics analytics, TimePr
         {
             throw new DomainException("reminder.limit", $"At most {Reminder.MaxPerTarget} reminders per item.");
         }
+
+        // Free: one reminder per item; more ("advanced reminders") is Family Plus.
+        await entitlements.EnsureCanRemindAsync(familyId, request.TargetId, ct);
 
         var userId = User.UserId();
         var now = clock.GetUtcNow();

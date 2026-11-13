@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/analytics/analytics.dart';
+import '../../core/api/api_client.dart';
 import '../../core/auth/auth_repository.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
@@ -80,9 +81,12 @@ class _JoinFamilyScreenState extends ConsumerState<JoinFamilyScreen> {
       ref.read(pendingInviteTokenProvider.notifier).state = null;
       ref.invalidate(meProvider);
       if (mounted) context.go('/today');
-    } catch (_) {
+    } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).errorGeneric)));
+        final l10n = AppLocalizations.of(context);
+        // The joiner cannot upgrade someone else's family: explain who can.
+        final text = e is ApiException && e.needsPlus ? l10n.joinFamilyFull : l10n.errorGeneric;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
       }
     } finally {
       if (mounted) setState(() => _busy = false);

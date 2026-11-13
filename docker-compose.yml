@@ -32,6 +32,15 @@ services:
       Storage__Root: /data/documents
       Push__FcmProjectId: ${FCM_PROJECT_ID:-}
       Push__FcmServiceAccountJson: ${FCM_SERVICE_ACCOUNT_JSON:-}
+      Billing__SandboxPurchases: ${BILLING_SANDBOX:-false}
+      Billing__Apple__BundleId: ${APPLE_BUNDLE_ID:-}
+      Billing__Apple__IssuerId: ${APPLE_IAP_ISSUER_ID:-}
+      Billing__Apple__KeyId: ${APPLE_IAP_KEY_ID:-}
+      Billing__Apple__PrivateKey: ${APPLE_IAP_PRIVATE_KEY:-}
+      Billing__Apple__Environment: ${APPLE_IAP_ENVIRONMENT:-Production}
+      Billing__Google__PackageName: ${GOOGLE_PLAY_PACKAGE_NAME:-}
+      Billing__Google__ServiceAccountJson: ${GOOGLE_PLAY_SERVICE_ACCOUNT_JSON:-}
+      Billing__Google__NotificationToken: ${GOOGLE_PLAY_NOTIFICATION_TOKEN:-}
       Storage__EncryptionKey: ${STORAGE_ENCRYPTION_KEY:?set STORAGE_ENCRYPTION_KEY in .env}
     ports: ["8080:8080"]
     volumes: [documents:/data/documents]

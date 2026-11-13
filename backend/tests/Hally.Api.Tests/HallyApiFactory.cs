@@ -56,6 +56,7 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseSetting("Storage:Root", StorageRoot);
         builder.UseSetting("Demo:ScansPerHour", "5");
         builder.UseSetting("Jobs:Enabled", "false");
+        builder.UseSetting("Billing:SandboxPurchases", "true");
         builder.UseSetting("Storage:EncryptionKey", Convert.ToBase64String(new byte[32].Select((_, i) => (byte)i).ToArray()));
         builder.ConfigureServices(s =>
         {

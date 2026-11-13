@@ -6,6 +6,7 @@ import '../../core/auth/auth_repository.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
+import '../billing/billing_repository.dart';
 import 'family_repository.dart';
 
 class FamilyScreen extends ConsumerWidget {
@@ -96,6 +97,7 @@ class FamilyScreen extends ConsumerWidget {
               Card(
                 child: Column(
                   children: [
+                    _PlanTile(entitlement: ref.watch(entitlementProvider).valueOrNull),
                     ListTile(
                       key: const Key('family.weeklyCard'),
                       leading: const HallyIconBadge(icon: Icons.auto_awesome_rounded, color: HallyColors.rose),
@@ -176,6 +178,33 @@ class _FamilyHero extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Current plan with this week's scans; opens the plan screen.
+class _PlanTile extends StatelessWidget {
+  const _PlanTile({required this.entitlement});
+
+  final Entitlement? entitlement;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final e = entitlement;
+    final plus = e?.isPlus ?? false;
+    final subtitle = e == null
+        ? null
+        : plus
+            ? (e.state == 'Trialing' ? l10n.planTrialShort : l10n.planPlusShort)
+            : l10n.planFreeUsage(e.usage.scansThisWeek, e.limits.scansPerWeek);
+    return ListTile(
+      key: const Key('family.plan'),
+      leading: HallyIconBadge(icon: Icons.workspace_premium_rounded, color: plus ? HallyColors.lavender : HallyColors.apricot),
+      title: Text(plus ? l10n.planPlus : l10n.planFree),
+      subtitle: subtitle == null ? null : Text(subtitle),
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: () => context.push('/plan'),
     );
   }
 }

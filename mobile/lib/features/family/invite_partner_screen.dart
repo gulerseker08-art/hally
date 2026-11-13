@@ -8,6 +8,7 @@ import '../../core/analytics/analytics.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
 import '../../l10n/gen/app_localizations.dart';
+import '../billing/paywall_screen.dart';
 import 'family_repository.dart';
 
 class InvitePartnerScreen extends ConsumerStatefulWidget {
@@ -30,8 +31,8 @@ class _InvitePartnerScreenState extends ConsumerState<InvitePartnerScreen> {
       final inv = await ref.read(familyRepositoryProvider).invite(widget.familyId);
       setState(() => _invitation = inv);
       return inv;
-    } catch (_) {
-      if (mounted) {
+    } catch (e) {
+      if (mounted && !openPaywallIfLimited(context, e)) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).errorGeneric)));
       }
       return null;

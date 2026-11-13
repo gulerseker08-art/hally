@@ -35,6 +35,10 @@ public static class AnalyticsEvents
     public const string HelperLinkOpened = "helper_link_opened";
     public const string HelperTaskCompleted = "helper_task_completed";
     public const string AssistantReplied = "assistant_replied";
+    public const string PaywallViewed = "paywall_viewed";
+    public const string TrialStarted = "trial_started";
+    public const string SubscriptionStarted = "subscription_started";
+    public const string SubscriptionCancelled = "subscription_cancelled";
 }
 
 public class AnalyticsEvent
