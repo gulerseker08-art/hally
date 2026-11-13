@@ -161,6 +161,7 @@ store notifications plus an hourly re-check. Prices come from the stores. See [d
 | DELETE | `/api/v1/me?confirm=true` | Delete the account |
 | POST | `/api/v1/families/{id}/leave` | Leave a family (the last adult leaving deletes it) |
 | GET | `/api/v1/privacy` | Facts for the privacy screen (retention, AI training statement) |
+| GET | `/api/v1/admin/metrics` | Beta metrics (daily events, funnel); `X-Admin-Key` header |
 | POST | `/api/v1/analytics/events` | Allow-listed app events (paywall_viewed etc.), scalar properties only |
 
 All state-changing POSTs except auth require an `Idempotency-Key` header. Errors are RFC 9457 problem details with a `code` extension.
@@ -170,4 +171,4 @@ All state-changing POSTs except auth require an `Idempotency-Key` header. Errors
 - **Sprint 1 – Foundation** (done): solution, auth, families, invitations, design tokens, tr/en, onboarding shell, analytics boundary, CI.
 - **Sprint 2 – Capture & AI proposals** (done): demo scan, capture sheet, share extension, extraction, approval sheet, tasks & calendar.
 - **Sprint 3 – Assistant & daily loop** (done): chat, Today, reminders, push, helper share links, weekly card.
-- **Sprint 4 – Monetization & beta**: plans, paywall, privacy & account deletion, beta pipeline.
+- **Sprint 4 – Monetization & beta** (done): plans, paywall, privacy & account deletion, error monitoring, metrics, beta pipeline ([docs/beta.md](docs/beta.md)).

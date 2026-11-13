@@ -22,6 +22,8 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
     private PostgreSqlContainer? _container;
     private string _connectionString = default!;
 
+    public const string AdminKey = "test-admin-key-0123456789abcdef";
+
     public TestClock Clock { get; } = new();
     public FakeVisionModel Ai { get; } = new();
     public RecordingPushSender Push { get; } = new();
@@ -57,6 +59,7 @@ public sealed class HallyApiFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseSetting("Demo:ScansPerHour", "5");
         builder.UseSetting("Jobs:Enabled", "false");
         builder.UseSetting("Billing:SandboxPurchases", "true");
+        builder.UseSetting("Admin:ApiKey", HallyApiFactory.AdminKey);
         builder.UseSetting("Storage:EncryptionKey", Convert.ToBase64String(new byte[32].Select((_, i) => (byte)i).ToArray()));
         builder.ConfigureServices(s =>
         {
