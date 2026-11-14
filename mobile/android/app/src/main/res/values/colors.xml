@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Hally canvas colours (HallyColors.canvas / canvasDark) for the launch screen. -->
+    <color name="splash_background">#F7F5FD</color>
+</resources>

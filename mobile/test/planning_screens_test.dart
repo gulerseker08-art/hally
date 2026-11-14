@@ -30,7 +30,11 @@ class _FakePlanning implements PlanningRepository {
   }
 
   @override
-  Future<void> reopenTask(String familyId, String taskId) async {}
+  Future<void> reopenTask(String familyId, String taskId) async {
+    final t = done.firstWhere((t) => t.id == taskId);
+    done.remove(t);
+    open.add(TaskItem(id: t.id, title: t.title, allDay: t.allDay, state: 'Open'));
+  }
 
   @override
   Future<List<TaskItem>> tasks(String familyId, {required String state}) async => List.of(state == 'Done' ? done : open);
@@ -99,6 +103,21 @@ void main() {
 
     await tester.tap(find.text('Tamamlanan'));
     await tester.pumpAndSettle();
+    expect(find.text('Beslenme çantası'), findsOneWidget);
+  });
+
+  testWidgets('tasks: undo on the snackbar reopens a completed task', (tester) async {
+    final repo = _FakePlanning();
+    await tester.pumpWidget(_app(const TasksScreen(), [planningRepositoryProvider.overrideWithValue(repo)]));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('task.t1')));
+    await tester.pumpAndSettle();
+    expect(find.text('Açık görev yok'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('task.undo')));
+    await tester.pumpAndSettle();
+    expect(repo.open.map((t) => t.id), ['t1']);
     expect(find.text('Beslenme çantası'), findsOneWidget);
   });
 
