@@ -13,8 +13,10 @@ ThemeData buildHallyTheme(Brightness brightness) {
   final scheme = ColorScheme.fromSeed(
     seedColor: HallyColors.lavender,
     brightness: brightness,
-    primary: dark ? const Color(0xFF9C8CF0) : HallyColors.lavender,
-    onPrimary: Colors.white,
+    // Light: deep lavender keeps white button text above WCAG AA (6.7:1; plain lavender is 4.3:1).
+    // Dark: the light lavender needs dark text on top (6.5:1; white would be 2.8:1).
+    primary: dark ? const Color(0xFF9C8CF0) : HallyColors.lavenderDeep,
+    onPrimary: dark ? HallyColors.canvasDark : Colors.white,
     secondary: HallyColors.mint,
     tertiary: HallyColors.apricot,
     error: HallyColors.error,
@@ -40,7 +42,10 @@ ThemeData buildHallyTheme(Brightness brightness) {
         titleSmall: base.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600, color: ink),
         bodyLarge: base.textTheme.bodyLarge?.copyWith(height: 1.45, color: ink),
         bodyMedium: base.textTheme.bodyMedium?.copyWith(height: 1.4, color: muted),
-        bodySmall: base.textTheme.bodySmall?.copyWith(color: muted),
+        // Minimum readable sizes: Material's defaults (11–12px) are too small for tired parents on the go.
+        bodySmall: base.textTheme.bodySmall?.copyWith(color: muted, fontSize: 13, height: 1.35),
+        labelMedium: base.textTheme.labelMedium?.copyWith(fontSize: 13),
+        labelSmall: base.textTheme.labelSmall?.copyWith(fontSize: 12),
         labelLarge: base.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 16),
       );
 

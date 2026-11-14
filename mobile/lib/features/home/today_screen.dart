@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../core/auth/auth_repository.dart';
 import '../../core/design/tokens.dart';
 import '../../core/design/widgets.dart';
+import '../../core/text/locale_case.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../capture/capture_repository.dart';
 import '../capture/capture_sheet.dart';
@@ -116,8 +117,8 @@ class TodayHero extends StatelessWidget {
         : now.hour < 18
             ? l10n.todayGreetingAfternoon(first)
             : l10n.todayGreetingEvening(first);
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    final date = DateFormat('d MMMM EEEE', locale).format(now);
+    final locale = Localizations.localeOf(context);
+    final date = upperCaseFor(DateFormat('d MMMM EEEE', locale.toLanguageTag()).format(now), locale);
     final d = data;
 
     return Container(
@@ -141,7 +142,7 @@ class TodayHero extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          date.toUpperCase(),
+                          date,
                           style: theme.textTheme.labelMedium?.copyWith(color: Colors.white70, letterSpacing: 1.2, fontWeight: FontWeight.w700),
                         ),
                       ),
@@ -280,7 +281,7 @@ class _WaitingCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            gradient: HallyGradients.magic,
+            gradient: HallyGradients.magicCard,
             borderRadius: BorderRadius.circular(HallyRadius.lg),
             boxShadow: HallyShadows.glow(HallyColors.rose),
           ),
@@ -304,7 +305,7 @@ class _WaitingCard extends StatelessWidget {
                         Expanded(
                           child: Text(l10n.todayWaiting, style: theme.textTheme.titleLarge?.copyWith(color: Colors.white)),
                         ),
-                        HallyPill(label: '${titles.length}', color: Colors.white.withValues(alpha: 0.25), solid: true),
+                        HallyPill(label: '${titles.length}', color: Colors.white, solid: true, textColor: HallyColors.lavenderDeep),
                       ],
                     ),
                     const SizedBox(height: HallySpace.sm),
@@ -376,11 +377,32 @@ class _TaskTileState extends ConsumerState<TaskTile> {
     setState(() => _checked = true);
     final messenger = ScaffoldMessenger.of(context);
     final l10n = AppLocalizations.of(context);
+    // The tile is gone once Today refreshes, so the undo action must not depend on this widget's ref.
+    final container = ProviderScope.containerOf(context);
+    final repo = ref.read(planningRepositoryProvider);
+    final familyId = widget.familyId;
+    final taskId = widget.task.id;
     try {
-      await ref.read(planningRepositoryProvider).completeTask(widget.familyId, widget.task.id);
-      messenger.showSnackBar(SnackBar(content: Text('🎉  ${l10n.taskDoneToast}'), duration: const Duration(seconds: 2)));
+      await repo.completeTask(familyId, taskId);
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(SnackBar(
+        content: Text('🎉  ${l10n.taskDoneToast}'),
+        duration: const Duration(seconds: 4),
+        action: SnackBarAction(
+          key: const Key('task.undo'),
+          label: l10n.taskReopen,
+          onPressed: () async {
+            try {
+              await repo.reopenTask(familyId, taskId);
+            } catch (_) {
+              messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
+            }
+            container.invalidate(todayProvider(familyId));
+          },
+        ),
+      ));
       await Future<void>.delayed(HallyMotion.medium);
-      ref.invalidate(todayProvider(widget.familyId));
+      ref.invalidate(todayProvider(familyId));
     } catch (_) {
       if (mounted) setState(() => _checked = false);
       messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
@@ -406,7 +428,7 @@ class _TaskTileState extends ConsumerState<TaskTile> {
         margin: const EdgeInsets.only(bottom: HallySpace.sm + 2),
         padding: const EdgeInsets.symmetric(horizontal: HallySpace.lg),
         alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(gradient: HallyGradients.mint, borderRadius: BorderRadius.circular(HallyRadius.lg)),
+        decoration: BoxDecoration(gradient: HallyGradients.mintDeep, borderRadius: BorderRadius.circular(HallyRadius.lg)),
         child: Row(
           children: [
             const Icon(Icons.check_rounded, color: Colors.white),

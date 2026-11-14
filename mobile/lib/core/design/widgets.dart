@@ -60,17 +60,20 @@ class HallyIconBadge extends StatelessWidget {
 
 /// Small rounded label, e.g. "Görev", "3".
 class HallyPill extends StatelessWidget {
-  const HallyPill({super.key, required this.label, required this.color, this.icon, this.solid = false});
+  const HallyPill({super.key, required this.label, required this.color, this.icon, this.solid = false, this.textColor});
 
   final String label;
   final Color color;
   final IconData? icon;
   final bool solid;
 
+  /// Overrides the label colour, e.g. for a white pill on a gradient.
+  final Color? textColor;
+
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final fg = solid ? Colors.white : color;
+    final fg = textColor ?? (solid ? Colors.white : HallyColors.readableOn(color, brightness));
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -86,7 +89,7 @@ class HallyPill extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: fg, fontWeight: FontWeight.w700, fontSize: 12, letterSpacing: 0.2),
+              style: TextStyle(color: fg, fontWeight: FontWeight.w700, fontSize: 13, letterSpacing: 0.2),
             ),
           ),
         ],

@@ -102,14 +102,36 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                                         : DateFormat.MMMEd(locale).add_Hm().format(t.dueAt!)),
                                 onChanged: (_) async {
                                   final repo = ref.read(planningRepositoryProvider);
-                                  if (t.state == 'Done') {
-                                    await repo.reopenTask(familyId, t.id);
-                                  } else {
-                                    await repo.completeTask(familyId, t.id);
+                                  final messenger = ScaffoldMessenger.of(context);
+                                  void refresh() {
+                                    ref.invalidate(tasksProvider((familyId, 'Open')));
+                                    ref.invalidate(tasksProvider((familyId, 'Done')));
+                                    ref.invalidate(todayProvider(familyId));
                                   }
-                                  ref.invalidate(tasksProvider((familyId, 'Open')));
-                                  ref.invalidate(tasksProvider((familyId, 'Done')));
-                                  ref.invalidate(todayProvider(familyId));
+
+                                  try {
+                                    if (t.state == 'Done') {
+                                      await repo.reopenTask(familyId, t.id);
+                                    } else {
+                                      await repo.completeTask(familyId, t.id);
+                                      messenger.hideCurrentSnackBar();
+                                      messenger.showSnackBar(SnackBar(
+                                        content: Text(l10n.taskDoneToast),
+                                        duration: const Duration(seconds: 4),
+                                        action: SnackBarAction(
+                                          key: const Key('task.undo'),
+                                          label: l10n.taskReopen,
+                                          onPressed: () async {
+                                            await repo.reopenTask(familyId, t.id).catchError((_) {});
+                                            refresh();
+                                          },
+                                        ),
+                                      ));
+                                    }
+                                  } catch (_) {
+                                    messenger.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
+                                  }
+                                  refresh();
                                 },
                               ),
                             ),

@@ -27,6 +27,12 @@ abstract final class HallyColors {
   /// Avatar colours, picked by a stable hash of the member's name.
   static const avatars = [lavender, mint, apricot, rose, sky];
 
+  /// Accent colour for text on its own soft tint ([softOf]): darkened in light mode and lightened in dark mode
+  /// so small labels reach WCAG AA (raw apricot or mint on their tint is only ~2.4:1).
+  static Color readableOn(Color accent, Brightness brightness) => brightness == Brightness.dark
+      ? Color.lerp(accent, Colors.white, 0.35)!
+      : Color.lerp(accent, ink, 0.45)!;
+
   /// Tinted background for an accent colour that also works in dark mode.
   static Color softOf(Color accent, Brightness brightness) =>
       accent.withValues(alpha: brightness == Brightness.dark ? 0.22 : 0.13);
@@ -45,6 +51,20 @@ abstract final class HallyGradients {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [Color(0xFF7C6BD6), Color(0xFFE27AA6), Color(0xFFF0A36A)],
+  );
+
+  /// Readable variant of [magic] for cards that carry white body text: every stop keeps white text at 4.6:1 or more.
+  static const magicCard = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF5A48C2), Color(0xFF8A4FBF), Color(0xFFB4547C)],
+  );
+
+  /// Readable mint for surfaces with white text (swipe-to-complete).
+  static const mintDeep = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF1B7A65), Color(0xFF23937A)],
   );
 
   static const mint = LinearGradient(
